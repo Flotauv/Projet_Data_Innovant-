@@ -13,3 +13,4 @@ Problems of adding files :
 - ISSUE : When someone has edited file between the moment you pulled and the moment you changed something => save changes 
 
 ('git add .' and 'git commit -m'message' ') then go to local main branch, pull it then do : 'git config pull.rebase false' (fusion)
+
