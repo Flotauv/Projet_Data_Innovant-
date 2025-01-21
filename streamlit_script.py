@@ -82,21 +82,26 @@ with col2_l1:
 
     ## Définition de la fonction 
 
-    def fct_accidents(file_accident,file_vehicules):
-        df_accidents = pd.read_csv(file_accident,sep=';')
+    def fct_accidents(file_caracteristique,file_vehicules):
+        df_accidents = pd.read_csv(file_caracteristique,sep=';')
         df_vehicules = pd.read_csv(file_vehicules, sep=';')
 
-        if 'Num_Acc' in df_accidents.columns:
+        if 'Accident_Id' in df_accidents.columns:
             df_accidents = df_accidents.rename(columns={'Accident_Id':'Num_Acc'})
-        if df_accidents['an'][0]+int(df_vehicules['Num_Acc'][0].str[:4]) != df_accidents['an'][0]*2:
+
+        df_vehicules['Num_Acc']= df_vehicules['Num_Acc'].astype(str)
+
+        if df_accidents['an'][0]+int(df_vehicules.iloc[0]['Num_Acc'][:4]) != df_accidents['an'][0]*2:
             print('Les fichiers comparés sont de la mauvaise année, l\'un l\'année {} et l\'autre l\'année {}'.format(int(df_vehicules['Num_Acc'][0].str[:4]),df_accidents['ann'][0]))
+        df_vehicules['Num_Acc'] = df_vehicules['Num_Acc'].astype(int)
+        df_accidents = df_accidents[df_accidents['dep']=='38']
         df_vehicules = df_vehicules[df_vehicules['catv']==1]
-        df_accidents_grenoble = pd.merge(df_accidents_grenoble,df_vehicules, how='inner',on='Num_Acc')
+        df_accidents_grenoble = pd.merge(df_accidents,df_vehicules, how='inner',on='Num_Acc')
         df_accidents_grenoble =df_accidents_grenoble[df_accidents_grenoble['catv']==1]
 
         return len(df_accidents_grenoble)
     
 
-    st.metric(label="Nombre total d'\'accidents'", value=fct_accidents('BaseDeDonnées/Accidents_france/caract-2023.csv','BaseDeDonnées/Accidents_france/vehicules-2023.csv'), delta=120, delta_color="inverse")
+    st.metric(label="Nombre total d'\'accidents'", value=fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv','BaseDeDonnées/Accidents_france/vehicules-2022.csv'), delta=120, delta_color="inverse")
 # Afficher la carte dans Streamlit
 #folium_static(map)
