@@ -3,14 +3,18 @@ import pandas as pd
 import plotly.express as plx
 import folium
 import datetime
-#import streamlit_folium
-#from streamlit_folium import st_folium
+
+from streamlit_folium import st_folium
 from geopy.distance import geodesic
 from shapely.geometry import shape
 from shapely.geometry import LineString
 import json
 st.set_page_config(layout="wide")
-page = st.sidebar.radio("Navigation", ("Dashboard 1", "Dashboard 2", "Dashboard 3"))
+page = st.sidebar.radio("Navigation",
+("Indicateurs politiques","Indicateurs infrastructures", "Indicateurs du suivi des impacts"))
+
+
+
 ## Les autres packages dont on va avoir besoin mais qui posent problème
 
 #json
@@ -26,8 +30,7 @@ st.write("La première version de notre dashboard avec les tenants et les abouti
 
 
 # Création des colonnes pour pouvoir mettre les graphiques
-col1_l1, col2_l1 = st.columns(2)
-col1_l2, col2_l2 = st.columns(2)
+col1_l1, col2_l1,col1_l2 = st.columns(3)
 
 with col1_l1:
 
@@ -216,3 +219,29 @@ with col2_l1:
     st.metric(label = 'Nombre de parkings à vélo dans l\'agglomération Grenobloise',
      value = fct_comptage_park_velo('BaseDeDonnées/Grenoble/stationnement_velo.csv')[0],
      border=True)
+
+
+with col1_l2:
+    def reverse_coordonnees(liste):
+        return [(coordonnees[1],coordonnees[0]) for coordonnees in liste ]
+    def fct_map_reseau_cyclable(file):
+
+
+        df_piste = pd.read_csv(file)
+        # Création des colonnes 'latitude' et 'longitude'
+        df_piste['lat'] = [element[1] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['long'] = [element[0] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['lat'] = df_piste['lat'].astype(object)
+        df_piste['long'] = df_piste['long'].astype(object)
+        df_piste['geo_shape'] = df_piste['geo_shape'].apply(lambda x: LineString(eval(x)['coordinates']))
+        df_piste['coordonnees'] = df_piste['geo_shape'].apply(lambda x: list(x.coords)).to_list()
+
+        df_piste['coordonnees'] = df_piste['coordonnees'].apply(lambda x: reverse_coordonnees(x))
+
+        # Création de la map
+        map_piste_cyclable = folium.Map(location=[45.188529, 5.724524],zoom_start=14,titles='Map Piste Cyclable')
+        for cords in df_piste['coordonnees']:
+            folium.PolyLine(cords, color='red').add_to(map_piste_cyclable)
+
+        return map_piste_cyclable
+    st_folium(fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls'))
