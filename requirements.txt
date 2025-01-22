@@ -4,4 +4,4 @@ plotly
 folium
 geopy
 shapely
-json
+

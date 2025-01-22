@@ -86,11 +86,12 @@ with col1_l1:
         'BaseDeDonnées/Grenoble/tmj_axes_routier.csv')['Annee'][0]))
     st.plotly_chart(fig, use_container_width=True)
 
-"""
+
 with col1_l2:
     st.header('Distance totale des pistes cyclables au sein de l\'agglomération grenobloise', divider='gray')
     st.write('Indicateur permettant d\'avoir la distance totale des pistes composant le réseau Grenoblois')
 
+"""
     # Fonction pour vérifier le type de géométrie
     def is_linestring(geo_shape):
         try:
