@@ -2,10 +2,12 @@ import streamlit as st
 import pandas as pd
 import plotly.express as plx
 import folium
-from streamlit_folium import st_folium
+#import streamlit_folium
+#from streamlit_folium import st_folium
 from geopy.distance import geodesic
 from shapely.geometry import shape
 from shapely.geometry import LineString
+import json
 st.set_page_config(layout="wide")
 ## Les autres packages dont on va avoir besoin mais qui posent problème
 
@@ -87,14 +89,14 @@ with col1_l1:
 
 
 with col1_l2:
-    col_1,col_2 = st.columns(2)
     st.header('Distance totale des pistes cyclables au sein de l\'agglomération grenobloise', divider='gray')
     st.write('Indicateur permettant d\'avoir la distance totale des pistes composant le réseau Grenoblois')
 
+"""
     # Fonction pour vérifier le type de géométrie
     def is_linestring(geo_shape):
         try:
-            shape =json.loads(geo_shape)
+            shape = json.loads(geo_shape)
             return shape['type'] == 'LineString'
         except:
             return False
@@ -112,6 +114,7 @@ with col1_l2:
                     for i in range(len(coordinates) - 1)
                 ]
                 return sum(distances)
+            
         except:
             return None  # Retourner None si un problème survient
 
@@ -125,7 +128,6 @@ with col1_l2:
     st.metric('Distance totale du réseau cyclable Grenoble en km  : ',value=fct_km_piste('BaseDeDonnées/Grenoble/pistes_cyclables.xls'),border=True)
 
         
-
     ## Partie cartographie 
     st.subheader('Cartographie réseau piste cyclable')
     def reverse_coordonnees(liste):
@@ -158,3 +160,41 @@ with col1_l2:
     st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
               divider='gray')
     st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')
+""" 
+
+
+with col2_l1:
+    st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
+              divider='gray')
+    st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')
+
+    # Définition de la fonction
+
+    def fct_accidents(file_caracteristique, file_vehicules):
+        df_accidents = pd.read_csv(file_caracteristique, sep=';')
+        df_vehicules = pd.read_csv(file_vehicules, sep=';')
+        # Condition pour avoir les clefs primaires du même nom
+        if 'Accident_Id' in df_accidents.columns:
+            df_accidents = df_accidents.rename(
+                columns={'Accident_Id': 'Num_Acc'})
+        # Condition pour avoir des fichiers de même année
+        df_vehicules['Num_Acc'] = df_vehicules['Num_Acc'].astype(str)
+        if df_accidents['an'][0]+int(df_vehicules.iloc[0]['Num_Acc'][:4]) != df_accidents['an'][0]*2:
+            print('Les fichiers comparés sont de la mauvaise année, l\'un l\'année {} et l\'autre l\'année {}'.format(
+                int(df_vehicules['Num_Acc'][0].str[:4]), df_accidents['ann'][0]))
+
+        df_vehicules['Num_Acc'] = df_vehicules['Num_Acc'].astype(int)
+        df_accidents = df_accidents[df_accidents['dep'] == '38']
+        df_vehicules = df_vehicules[df_vehicules['catv'] == 1]
+        df_accidents_grenoble = pd.merge(
+            df_accidents, df_vehicules, how='inner', on='Num_Acc')
+        df_accidents_grenoble = df_accidents_grenoble[df_accidents_grenoble['catv'] == 1]
+
+        annee = df_accidents.iloc[0]['an']
+        return len(df_accidents_grenoble), annee
+
+    st.metric(label="Nombre total d'\'accidents durant l\'année {}".format(fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv', 'BaseDeDonnées/Accidents_france/vehicules-2022.csv')[1]),
+              value=fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv',
+                                  'BaseDeDonnées/Accidents_france/vehicules-2022.csv')[0],
+              delta=3, delta_color="inverse",border=True)
+    
