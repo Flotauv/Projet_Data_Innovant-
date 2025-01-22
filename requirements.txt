@@ -4,5 +4,5 @@ plotly
 folium
 geopy
 shapely
-streamlit_folium
+streamlit_folium==0.4.0
 
