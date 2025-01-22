@@ -155,7 +155,7 @@ with col1:
 
 #col3, col4 = st.columns([1, 1])
 with col2:
-    st.header('Cartographie du réseau cyclable et des parkings à vélo')
+    st.header('Cartographie du réseau cyclable et des parkings à vélo',divider='gray')
     def reverse_coordonnees(liste):
         return [(coordonnees[1],coordonnees[0]) for coordonnees in liste ]
     def fct_map_reseau_cyclable(file):
