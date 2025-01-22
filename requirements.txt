@@ -3,3 +3,5 @@ pandas
 plotly
 folium
 geopy
+shapely
+json

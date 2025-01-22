@@ -6,6 +6,7 @@ from streamlit_folium import st_folium
 from geopy.distance import geodesic
 from shapely.geometry import shape
 from shapely.geometry import LineString
+import json
 st.set_page_config(layout="wide")
 ## Les autres packages dont on va avoir besoin mais qui posent problème
 
@@ -126,7 +127,7 @@ with col1_l2:
     st.metric('Distance totale du réseau cyclable Grenoble en km  : ',value=fct_km_piste('BaseDeDonnées/Grenoble/pistes_cyclables.xls'),border=True)
 
         
-
+"""
     ## Partie cartographie 
     st.subheader('Cartographie réseau piste cyclable')
     def reverse_coordonnees(liste):
@@ -159,3 +160,4 @@ with col1_l2:
     st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
               divider='gray')
     st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')
+""" 
