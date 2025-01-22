@@ -1,4 +1,6 @@
 
+
+## Ne pas oublier d'installer les packages depuis le terminal 
 import streamlit as st
 import pandas as pd
 import plotly.express as plx
