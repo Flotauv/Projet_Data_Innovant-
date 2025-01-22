@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as plx
 import json
 import folium
+from streamlit_folium import st_folium
 from geopy.distance import geodesic
 #from shapely.op import length
 from shapely.geometry import shape
@@ -168,17 +169,18 @@ with col1_l2:
         return [(coordonnees[1],coordonnees[0]) for coordonnees in liste ]
     
     def fct_map_reseau_cyclable(file):
-        df_piste = pd.read_csv(file,sep=';')
+        df_piste = pd.read_csv(file)
         ## Création des colonnes 'latitude' et 'longitude' 
-        df_piste['lat'] = [element[0] for element in df_piste['geo_point_2d'].str.split(',')]
-        df_piste['long'] = [element[1] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['lat'] = [element[1] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['long'] = [element[0] for element in df_piste['geo_point_2d'].str.split(',')]
         df_piste['lat'] = df_piste['lat'].astype(object)
         df_piste['long'] = df_piste['long'].astype(object)
         df_piste['geo_shape'] = df_piste['geo_shape'].apply(lambda x: LineString(eval(x)['coordinates']))
         df_piste['coordonnees']= df_piste['geo_shape'].apply(lambda x : list(x.coords)).to_list()
         
-        df_piste['coordonnees']= df_piste['coordonnees'].apply(lambda x: reverse_coordonnees(x))
-    
+
+        #df_piste['coordonnees']= df_piste['coordonnees'].apply(lambda x: reverse_coordonnees(x))
+
         ## Création de la map 
         map_piste_cyclable = folium.Map(location=[45.188529, 5.724524],
                                               zoom_start=14,
@@ -188,7 +190,39 @@ with col1_l2:
 
         return map_piste_cyclable
     
-    st.map(fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls'))
+    
+    
+
+    #st.map(data)
+    
+    def fct_map_reseau_cyclable(file):
+        df_piste = pd.read_csv(file)
+        ## Création des colonnes 'latitude' et 'longitude' 
+        df_piste['lat'] = [element[1] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['long'] = [element[0] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['lat'] = df_piste['lat'].astype(object)
+        df_piste['long'] = df_piste['long'].astype(object)
+        df_piste['geo_shape'] = df_piste['geo_shape'].apply(lambda x: LineString(eval(x)['coordinates']))
+        df_piste['coordonnees']= df_piste['geo_shape'].apply(lambda x : list(x.coords)).to_list()
+        
+        df_piste['coordonnees']= df_piste['coordonnees'].apply(lambda x: reverse_coordonnees(x))
+
+    
+        ## Création de la map 
+        map_piste_cyclable = folium.Map(location=[45.188529, 5.724524],
+                                              zoom_start=14,
+                                              titles = 'Map Piste Cyclable')
+        for cords in df_piste['coordonnees']:
+            folium.PolyLine(cords,color = 'red').add_to(map_piste_cyclable)
+       
+        return map_piste_cyclable
+    
+    st_folium(fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls'))
+    #st.markdown(fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls'), unsafe_allow_html=True)  
+    
+    
+    
+
 
 with col2_l2:
     st.header('Indicateur 4 : Nombre d\'arceaux disponibles dans l\'agglomération Grenobloise',divider = 'gray')
