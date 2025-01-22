@@ -30,9 +30,11 @@ st.write("La première version de notre dashboard avec les tenants et les abouti
 
 
 # Création des colonnes pour pouvoir mettre les graphiques
-col1_l1, col2_l1,col1_l2 = st.columns(3)
+col1, col2 = st.columns(2)
 
-with col1_l1:
+
+
+with col1:
 
     def fct_transform_tmja_to_axes_routier(file):
         df_tmja = pd.read_csv(file, sep=';')
@@ -93,82 +95,13 @@ with col1_l1:
     st.plotly_chart(fig, use_container_width=True)
 
 
-with col1_l2:
-    st.header('Distance totale des pistes cyclables au sein de l\'agglomération grenobloise', divider='gray')
-    st.write('Indicateur permettant d\'avoir la distance totale des pistes composant le réseau Grenoblois')
-
-"""
-    # Fonction pour vérifier le type de géométrie
-    def is_linestring(geo_shape):
-        try:
-            shape = json.loads(geo_shape)
-            return shape['type'] == 'LineString'
-        except:
-            return False
-
-    def calculate_distance(geo_shape):
-
-        try:
-            # Charger les coordonnées GeoJSON
-            shape = json.loads(geo_shape)
-            if shape['type'] == 'LineString':
-                coordinates = shape['coordinates']
-                # Calculer la distance totale entre les points consécutifs
-                distances = [
-                    geodesic(coordinates[i], coordinates[i+1]).kilometers
-                    for i in range(len(coordinates) - 1)
-                ]
-                return sum(distances)
-            
-        except:
-            return None  # Retourner None si un problème survient
-
-    def fct_km_piste(file_with_geo_shape):
-        df = pd.read_csv(file_with_geo_shape)
-        # Vérifier si toutes les géométries sont des LineString
-        df['is_linestring'] = df['geo_shape'].apply(is_linestring)
-        df['distance_km'] = df['geo_shape'].apply(calculate_distance)
-        return round(df.distance_km.sum())
-
-    st.metric('Distance totale du réseau cyclable Grenoble en km  : ',value=fct_km_piste('BaseDeDonnées/Grenoble/pistes_cyclables.xls'),border=True)
 
         
-    ## Partie cartographie 
-    st.subheader('Cartographie réseau piste cyclable')
-    def reverse_coordonnees(liste):
-        return [(coordonnees[1],coordonnees[0]) for coordonnees in liste ]
-    
-    def fct_map_reseau_cyclable(file):
 
 
-        df_piste = pd.read_csv(file)
-        # Création des colonnes 'latitude' et 'longitude'
-        df_piste['lat'] = [element[1] for element in df_piste['geo_point_2d'].str.split(',')]
-        df_piste['long'] = [element[0] for element in df_piste['geo_point_2d'].str.split(',')]
-        df_piste['lat'] = df_piste['lat'].astype(object)
-        df_piste['long'] = df_piste['long'].astype(object)
-        df_piste['geo_shape'] = df_piste['geo_shape'].apply(lambda x: LineString(eval(x)['coordinates']))
-        df_piste['coordonnees'] = df_piste['geo_shape'].apply(lambda x: list(x.coords)).to_list()
-
-        df_piste['coordonnees'] = df_piste['coordonnees'].apply(lambda x: reverse_coordonnees(x))
-
-        # Création de la map
-        map_piste_cyclable = folium.Map(location=[45.188529, 5.724524],zoom_start=14,titles='Map Piste Cyclable')
-        for cords in df_piste['coordonnees']:
-            folium.PolyLine(cords, color='red').add_to(map_piste_cyclable)
-
-        return map_piste_cyclable
-    st_folium(fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls'))
-        
-
-with col1_l2:
-    st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
-              divider='gray')
-    st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')
-""" 
 
 
-with col2_l1:
+with col2:
     st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
               divider='gray')
     st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')
@@ -202,7 +135,7 @@ with col2_l1:
               value=fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv',
                                   'BaseDeDonnées/Accidents_france/vehicules-2022.csv')[0],
               delta=3, delta_color="inverse",border=True)
-with col2_l1: 
+with col2: 
     st.header('Nombre de parkings à vélo dans l\'agglomération Grenobloise')
 
 
@@ -220,8 +153,8 @@ with col2_l1:
      value = fct_comptage_park_velo('BaseDeDonnées/Grenoble/stationnement_velo.csv')[0],
      border=True)
 
-
-with col1_l2:
+col3, col4 = st.columns([1, 1])
+with col3, col4:
     def reverse_coordonnees(liste):
         return [(coordonnees[1],coordonnees[0]) for coordonnees in liste ]
     def fct_map_reseau_cyclable(file):
@@ -241,7 +174,26 @@ with col1_l2:
         # Création de la map
         map_piste_cyclable = folium.Map(location=[45.188529, 5.724524],zoom_start=14,titles='Map Piste Cyclable')
         for cords in df_piste['coordonnees']:
-            folium.PolyLine(cords, color='red').add_to(map_piste_cyclable)
+            folium.PolyLine(cords, color='blue').add_to(map_piste_cyclable)
 
         return map_piste_cyclable
-    st_folium(fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls'))
+
+
+    def fct_arceaux_velo(file):
+        df_sta = pd.read_csv(file)
+        df_sta = df_sta[df_sta['commune_local']=='Grenoble']
+        df_sta= df_sta.drop(columns=['id_osm','gratuit','type_accroche'])
+        df_sta = df_sta.dropna()
+        df_sta['date_maj'] = pd.to_datetime(df_sta['date_maj'])
+        df_sta['annee'] = df_sta['date_maj'].dt.year
+        carte = fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls')
+        df_sta['ratio_color'] =df_sta['capacite']/df_sta['capacite'].max()
+
+        for index, row in df_sta.iterrows():
+            folium.CircleMarker([row['lat'],row['lon']],
+            radius=5,popup=f"capacité :{row['capacite']}",
+            color='red',
+            fill=True).add_to(carte)
+        return carte
+    with st.expander('Cartographie du réseau cyclable avec parkings '):
+        st_folium(fct_arceaux_velo('BaseDeDonnées/Grenoble/stationnement_velo.csv'))
