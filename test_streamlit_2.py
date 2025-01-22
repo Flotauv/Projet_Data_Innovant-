@@ -195,5 +195,5 @@ with col3, col4:
             color='red',
             fill=True).add_to(carte)
         return carte
-    with st.expander('Cartographie du réseau cyclable avec parkings '):
-        st_folium(fct_arceaux_velo('BaseDeDonnées/Grenoble/stationnement_velo.csv'))
+    #with st.expander('Cartographie du réseau cyclable avec parkings '):
+    st_folium(fct_arceaux_velo('BaseDeDonnées/Grenoble/stationnement_velo.csv'))
