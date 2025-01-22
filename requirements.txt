@@ -4,4 +4,5 @@ plotly
 folium
 geopy
 shapely
-st_folium
+streamlit_folium
+
