@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as plx
 import folium
+import datetime
 #import streamlit_folium
 #from streamlit_folium import st_folium
 from geopy.distance import geodesic
@@ -197,4 +198,20 @@ with col2_l1:
               value=fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv',
                                   'BaseDeDonnées/Accidents_france/vehicules-2022.csv')[0],
               delta=3, delta_color="inverse",border=True)
-    
+with col2_l1: 
+    st.header('Nombre de parkings à vélo dans l\'agglomération Grenobloise')
+
+
+    def fct_comptage_park_velo(file):
+        df_sta = pd.read_csv(file)
+        df_sta = df_sta[df_sta['commune_local']=='Grenoble']
+        df_sta= df_sta.drop(columns=['id_osm','gratuit','type_accroche'])
+        df_sta = df_sta.dropna()
+        df_sta['date_maj'] = pd.to_datetime(df_sta['date_maj'])
+        df_sta['annee'] = df_sta['date_maj'].dt.year
+
+        return (len(df_sta),df_sta['annee'][0])
+
+    st.metric(label = 'Nombre de parkings à vélo dans l\'agglomération Grenobloise',
+     value = fct_comptage_park_velo('BaseDeDonnées/Grenoble/stationnement_velo.csv')[0],
+     border=True)
