@@ -101,7 +101,7 @@ with col1:
 
 
 
-with col2:
+with col1:
     st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
               divider='gray')
     st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')
@@ -135,7 +135,7 @@ with col2:
               value=fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv',
                                   'BaseDeDonnées/Accidents_france/vehicules-2022.csv')[0],
               delta=3, delta_color="inverse",border=True)
-with col2: 
+with col1: 
     st.header('Nombre de parkings à vélo dans l\'agglomération Grenobloise')
 
 
@@ -153,8 +153,8 @@ with col2:
      value = fct_comptage_park_velo('BaseDeDonnées/Grenoble/stationnement_velo.csv')[0],
      border=True)
 
-col3, col4 = st.columns([1, 1])
-with col3, col4:
+#col3, col4 = st.columns([1, 1])
+with col2:
     def reverse_coordonnees(liste):
         return [(coordonnees[1],coordonnees[0]) for coordonnees in liste ]
     def fct_map_reseau_cyclable(file):
