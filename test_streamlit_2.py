@@ -10,6 +10,7 @@ from shapely.geometry import shape
 from shapely.geometry import LineString
 import json
 st.set_page_config(layout="wide")
+page = st.sidebar.radio("Navigation", ("Dashboard 1", "Dashboard 2", "Dashboard 3"))
 ## Les autres packages dont on va avoir besoin mais qui posent problème
 
 #json
