@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as plx
+import folium
+from streamlit_folium import st_folium
+from geopy.distance import geodesic
+from shapely.geometry import shape
+from shapely.geometry import LineString
 st.set_page_config(layout="wide")
 ## Les autres packages dont on va avoir besoin mais qui posent problème
 
@@ -81,7 +86,75 @@ with col1_l1:
     st.plotly_chart(fig, use_container_width=True)
 
 
-with col2_l1:
+with col1_l2:
+    col_1,col_2 = st.columns(2)
+    st.header('Distance totale des pistes cyclables au sein de l\'agglomération grenobloise', divider='gray')
+    st.write('Indicateur permettant d\'avoir la distance totale des pistes composant le réseau Grenoblois')
+
+    # Fonction pour vérifier le type de géométrie
+    def is_linestring(geo_shape):
+        try:
+            shape = st.json.loads(geo_shape)
+            return shape['type'] == 'LineString'
+        except:
+            return False
+
+    def calculate_distance(geo_shape):
+
+        try:
+            # Charger les coordonnées GeoJSON
+            shape = st.json.loads(geo_shape)
+            if shape['type'] == 'LineString':
+                coordinates = shape['coordinates']
+                # Calculer la distance totale entre les points consécutifs
+                distances = [
+                    geodesic(coordinates[i], coordinates[i+1]).kilometers
+                    for i in range(len(coordinates) - 1)
+                ]
+                return sum(distances)
+        except:
+            return None  # Retourner None si un problème survient
+
+    def fct_km_piste(file_with_geo_shape):
+        df = pd.read_csv(file_with_geo_shape)
+        # Vérifier si toutes les géométries sont des LineString
+        df['is_linestring'] = df['geo_shape'].apply(is_linestring)
+        df['distance_km'] = df['geo_shape'].apply(calculate_distance)
+        return round(df.distance_km.sum())
+
+    st.metric('Distance totale du réseau cyclable Grenoble en km  : ',value=fct_km_piste('BaseDeDonnées/Grenoble/pistes_cyclables.xls'),border=True)
+
+        
+
+    ## Partie cartographie 
+    st.subheader('Cartographie réseau piste cyclable')
+    def reverse_coordonnees(liste):
+        return [(coordonnees[1],coordonnees[0]) for coordonnees in liste ]
+    
+    def fct_map_reseau_cyclable(file):
+
+
+        df_piste = pd.read_csv(file)
+        # Création des colonnes 'latitude' et 'longitude'
+        df_piste['lat'] = [element[1] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['long'] = [element[0] for element in df_piste['geo_point_2d'].str.split(',')]
+        df_piste['lat'] = df_piste['lat'].astype(object)
+        df_piste['long'] = df_piste['long'].astype(object)
+        df_piste['geo_shape'] = df_piste['geo_shape'].apply(lambda x: LineString(eval(x)['coordinates']))
+        df_piste['coordonnees'] = df_piste['geo_shape'].apply(lambda x: list(x.coords)).to_list()
+
+        df_piste['coordonnees'] = df_piste['coordonnees'].apply(lambda x: reverse_coordonnees(x))
+
+        # Création de la map
+        map_piste_cyclable = folium.Map(location=[45.188529, 5.724524],zoom_start=14,titles='Map Piste Cyclable')
+        for cords in df_piste['coordonnees']:
+            folium.PolyLine(cords, color='red').add_to(map_piste_cyclable)
+
+        return map_piste_cyclable
+    st_folium(fct_map_reseau_cyclable('BaseDeDonnées/Grenoble/pistes_cyclables.xls'))
+        
+
+with col1_l2:
     st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
               divider='gray')
     st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')

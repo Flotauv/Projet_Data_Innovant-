@@ -142,7 +142,7 @@ with col1_l2:
     # Fonction pour vérifier le type de géométrie
     def is_linestring(geo_shape):
         try:
-            shape = json.loads(geo_shape)
+            shape = st.json.loads(geo_shape)
             return shape['type'] == 'LineString'
         except:
             return False
@@ -151,7 +151,7 @@ with col1_l2:
 
         try:
             # Charger les coordonnées GeoJSON
-            shape = json.loads(geo_shape)
+            shape = st.json.loads(geo_shape)
             if shape['type'] == 'LineString':
                 coordinates = shape['coordinates']
                 # Calculer la distance totale entre les points consécutifs
