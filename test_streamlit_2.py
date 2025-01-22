@@ -86,9 +86,8 @@ with col1_l1:
         'BaseDeDonnées/Grenoble/tmj_axes_routier.csv')['Annee'][0]))
     st.plotly_chart(fig, use_container_width=True)
 
-
+"""
 with col1_l2:
-    col_1,col_2 = st.columns(2)
     st.header('Distance totale des pistes cyclables au sein de l\'agglomération grenobloise', divider='gray')
     st.write('Indicateur permettant d\'avoir la distance totale des pistes composant le réseau Grenoblois')
 
@@ -127,7 +126,6 @@ with col1_l2:
     st.metric('Distance totale du réseau cyclable Grenoble en km  : ',value=fct_km_piste('BaseDeDonnées/Grenoble/pistes_cyclables.xls'),border=True)
 
         
-"""
     ## Partie cartographie 
     st.subheader('Cartographie réseau piste cyclable')
     def reverse_coordonnees(liste):
