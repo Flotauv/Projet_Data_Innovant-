@@ -3,13 +3,13 @@ import pandas as pd
 import plotly.express as plx
 st.set_page_config(layout="wide")
 ## Les autres packages dont on va avoir besoin mais qui posent problème
-"""
-json
-folium
-streamlit_folium
-geopy
-shapely
-"""
+
+#json
+#folium
+#streamlit_folium
+#geopy
+#shapely
+
 
 st.title("Dashboard récapitulatif environnement vélo Grenoble")
 st.write("La première version de notre dashboard avec les tenants et les aboutissants de \
@@ -79,3 +79,9 @@ with col1_l1:
     st.write('Traffic routier lié à l\'année  {}'.format(fct_transform_tmja_to_axes_routier(
         'BaseDeDonnées/Grenoble/tmj_axes_routier.csv')['Annee'][0]))
     st.plotly_chart(fig, use_container_width=True)
+
+
+with col2_l1:
+    st.header('Nombre d\'accidents dans l\'agglomération Grenobloise',
+              divider='gray')
+    st.write('Indicateur permettant d\'avoir le nombre d\'accidents au sein de l\'agglomération Grenobloise')
