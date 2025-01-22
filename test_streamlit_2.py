@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as plx
 import folium
-import streamlit_folium
-from streamlit_folium import st_folium
+#import streamlit_folium
+#from streamlit_folium import st_folium
 from geopy.distance import geodesic
 from shapely.geometry import shape
 from shapely.geometry import LineString
