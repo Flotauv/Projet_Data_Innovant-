@@ -9,16 +9,10 @@ from geopy.distance import geodesic
 from shapely.geometry import shape
 from shapely.geometry import LineString
 import json
-st.set_page_config(layout="wide")
-page = st.sidebar.radio("Navigation",
-("Indicateurs politiques","Indicateurs infrastructures", "Indicateurs du suivi des impacts"))
 
-def main():
-    st.header('HOME PAGE')
-    st.title('Dashboard mobilité')
-    
-if __name__ == '__main()__':
-    main()
+st.set_page_config(layout="wide")
+
+
 
 
 ## Les autres packages dont on va avoir besoin mais qui posent problème
