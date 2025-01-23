@@ -11,27 +11,48 @@ def fct_file_carac(file):
     if 'Accident_Id' in df_accident.columns:
         df_accident = df_accident.rename(columns={'Accident_Id': 'Num_Acc'})
     df_accident['Num_Acc'] = df_accident['Num_Acc'].astype(str)
-
     annee = df_accident.iloc[0]['Num_Acc'][:4]
-    
+
     return int(annee)
 
 ## fct qui indique l'année du fichier véhicule 
 def fct_file_vehicule(file):
-    df_vehicule = pd.read_csv(file,sep=';')
+    try:
+        for sep in [';',',']:
+            try :
+                df_vehicule = pd.read_csv(file,sep=sep)
+                break
+            except pd.errors.ParserError:
+                continue
+    except pd.errors.ParserError:
+        print("Erreur : Impossible de lire les fichiers CSV.")
+        return None, None
+
     if 'Accident_Id' in df_vehicule.columns:
         df_vehicule = df_vehicule.rename(columns ={'Accident_Id':'Num_Acc'})
     df_vehicule['Num_Acc'] = df_vehicule['Num_Acc'].astype(str)
     annee = df_vehicule.iloc[0]['Num_Acc'][:4]
+
     return int(annee)
 
 
 
 
 def fct_accidents(file_caracteristique, file_vehicules):
-        df_accidents = pd.read_csv(file_caracteristique, sep=';')
-        df_vehicules = pd.read_csv(file_vehicules, sep=';')
+        try :
+            for sep in [';',',']:
+                try : 
+                    df_vehicules = pd.read_csv(file_vehicules, sep=sep)
+                    break
+                except  pd.errors.ParserError:
+                    continue
+        except pd.errors.ParserError:
+            print("Erreur : Impossible de lire les fichiers CSV.")
+            return None, None
+        
+
         # Condition pour avoir les clefs primaires du même nom
+        df_accidents = pd.read_csv(file_caracteristique, sep=';')
         if 'Accident_Id' in df_accidents.columns:
             df_accidents = df_accidents.rename(columns={'Accident_Id': 'Num_Acc'})
         # Condition pour avoir des fichiers de même année
