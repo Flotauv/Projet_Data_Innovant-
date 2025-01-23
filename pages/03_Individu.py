@@ -79,6 +79,7 @@ with colonne_1:
 
     st.bar_chart(df_accidents,x='Année',y='Nombre accidents',use_container_width=True)
     st.dataframe(df_accidents)
+    
 
 
     st.metric(label="Nombre total d'\'accidents durant l\'année {}".format(fct_accidents('BaseDeDonnées/Accidents_france/Caractéristiques/carcteristiques-2022.csv', 'BaseDeDonnées/Accidents_france/Véhicules/vehicules-2022.csv')[1]),
