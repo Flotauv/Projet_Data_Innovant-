@@ -33,6 +33,6 @@ with colonne_1:
         return len(df_accidents_grenoble), annee
 
     st.metric(label="Nombre total d'\'accidents durant l\'année {}".format(fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv', 'BaseDeDonnées/Accidents_france/vehicules-2022.csv')[1]),
-              value=fct_accidents('BaseDeDonnées/Accidents_france/carcteristiques-2022.csv',
-                                  'BaseDeDonnées/Accidents_france/vehicules-2022.csv')[0],
+              value=fct_accidents('BaseDeDonnées/Accidents_france/Caractéristiques/carcteristiques-2022.csv',
+                                  'BaseDeDonnées/Accidents_france/Véhicules/vehicules-2022.csv')[0],
               delta=3, delta_color="inverse",border=True)
