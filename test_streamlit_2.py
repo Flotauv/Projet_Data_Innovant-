@@ -13,6 +13,12 @@ st.set_page_config(layout="wide")
 page = st.sidebar.radio("Navigation",
 ("Indicateurs politiques","Indicateurs infrastructures", "Indicateurs du suivi des impacts"))
 
+def main():
+    st.header('HOME PAGE')
+    st.title('Dashboard mobilité')
+    
+if __name__ == '__main()__':
+    main()
 
 
 ## Les autres packages dont on va avoir besoin mais qui posent problème
@@ -24,9 +30,9 @@ page = st.sidebar.radio("Navigation",
 #shapely
 
 
-st.title("Dashboard récapitulatif environnement vélo Grenoble")
-st.write("La première version de notre dashboard avec les tenants et les aboutissants de \
-         ce que nous voulons montrer")
+#st.title("Dashboard récapitulatif environnement vélo Grenoble")
+#st.write("La première version de notre dashboard avec les tenants et les aboutissants de \
+         #ce que nous voulons montrer")
 
 
 # Création des colonnes pour pouvoir mettre les graphiques
