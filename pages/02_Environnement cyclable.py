@@ -9,9 +9,9 @@ from geopy.distance import geodesic
 from shapely.geometry import shape
 from shapely.geometry import LineString
 import json
+
 st.set_page_config(layout="wide")
-page = st.sidebar.radio("Navigation",
-("Indicateurs politiques","Indicateurs infrastructures", "Indicateurs du suivi des impacts"))
+
 
 
 
@@ -24,9 +24,9 @@ page = st.sidebar.radio("Navigation",
 #shapely
 
 
-st.title("Dashboard récapitulatif environnement vélo Grenoble")
-st.write("La première version de notre dashboard avec les tenants et les aboutissants de \
-         ce que nous voulons montrer")
+#st.title("Dashboard récapitulatif environnement vélo Grenoble")
+#st.write("La première version de notre dashboard avec les tenants et les aboutissants de \
+         #ce que nous voulons montrer")
 
 
 # Création des colonnes pour pouvoir mettre les graphiques
