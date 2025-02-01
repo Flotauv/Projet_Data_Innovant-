@@ -69,6 +69,28 @@ def load_pistes():
     gdf = gdf.to_crs(epsg=4326)  # Reprojeter en latitude/longitude
     return gdf
 
+# Fonction pour charger les arceaux
+@st.cache_data
+def load_arceaux():
+    df = pd.read_csv("Arceaux2.csv")  # Remplacez par le chemin correct
+    df['geometry'] = df.apply(lambda row: Point(row['longitude'], row['latitude']), axis=1)
+    facteur_echelle = 0.5
+    df['rayon'] = facteur_echelle * df['mob_arce_nb']
+    gdf = gpd.GeoDataFrame(df, geometry='geometry', crs="EPSG:4326")
+    return gdf
+
+# Fonction pour charger commune_pistes.csv
+@st.cache_data
+def load_commune_pistes():
+    df = pd.read_csv("commune_pistes.csv")  # Remplacez par le chemin correct
+    return df[["Commune", "Km/densité", "Km_de_pistes"]]  # Sélectionner les colonnes souhaitées
+
+# Charger les données
+communes_selectionnees = load_communes()
+pistes_cyclables = load_pistes()
+comptages = load_comptages()
+arceaux = load_arceaux()
+commune_pistes = load_commune_pistes()
 
 
 ## Création des colonnes pour afficher nos graphiques
