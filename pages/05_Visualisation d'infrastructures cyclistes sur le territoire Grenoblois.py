@@ -2,14 +2,21 @@ import pandas as pd
 import streamlit as st 
 import osmnx as ox 
 import geopandas as gpd
-
+from shapely.wkt import loads
+from shapely.geometry import Point
+import folium
 
 # Configurer la page Streamlit
 st.set_page_config(
     page_title="Visualisation d'infrastructures cyclistes sur le territoire Grenoblois",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    page_icon=":shark:",
+    menu_items={
+        'About' : 'https://www.presse-citron.net/crypto/comparatif/binance-vs-coinbase/'
+    }
 )
+st.title("Visualisation d'infrastructures cyclistes sur le territoire Grenoblois")
 
 ## Définition des fonctions utiles à la page : 
 
@@ -39,6 +46,32 @@ def load_communes():
         except Exception as e:
             st.error(f"Erreur lors du traitement de {commune}: {e}")
     return gpd.GeoDataFrame(communes_selectionnees, crs="EPSG:4326")
+
+# Fonction pour charger les comptages vélo
+@st.cache_data
+def load_comptages():
+    df = pd.read_csv("comptages.csv")  # Remplacez par le chemin correct
+    # Calculer les rayons des cercles proportionnels
+    facteur_echelle = 0.002
+    df['rayon'] = facteur_echelle * df['tmj_2022'] ** 0.5
+    df['geometry'] = df['geo_point_2d'].apply(
+        lambda x: Point(map(float, x.split(',')[::-1]))  # Inverser les coordonnées
+    )
+    gdf = gpd.GeoDataFrame(df, geometry='geometry', crs="EPSG:4326")
+    return gdf
+
+# Fonction pour charger les pistes cyclables
+@st.cache_data
+def load_pistes():
+    df = pd.read_csv("Pistes.csv")  # Remplacez par le chemin correct
+    df['geometry'] = df['geometry'].apply(loads)  # Convertir WKT en géométries Shapely
+    gdf = gpd.GeoDataFrame(df, geometry='geometry', crs="EPSG:3857")  # Définir le CRS actuel
+    gdf = gdf.to_crs(epsg=4326)  # Reprojeter en latitude/longitude
+    return gdf
+
+
+
+## Création des colonnes pour afficher nos graphiques
 col1,col2 = st.columns([3,1])
 
 
