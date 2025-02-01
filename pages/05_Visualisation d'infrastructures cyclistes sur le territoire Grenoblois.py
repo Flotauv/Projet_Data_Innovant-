@@ -4,7 +4,12 @@ import osmnx as ox
 import geopandas as gpd
 
 
-st.title("Visualisation d'infrastructures cyclistes sur le territoire Grenoblois")
+# Configurer la page Streamlit
+st.set_page_config(
+    page_title="Visualisation d'infrastructures cyclistes sur le territoire Grenoblois",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 ## Définition des fonctions utiles à la page : 
 

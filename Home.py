@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import os 
+
+
+## Packages et version à mettre dans le fichier texte. 
 result = os.popen('pip list').read()
 st.code(result, language=None)
 
