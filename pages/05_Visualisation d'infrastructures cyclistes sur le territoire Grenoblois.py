@@ -191,12 +191,13 @@ ax.legend(
     title_fontsize=12
 )
 
+
 # Sauvegarde de l'image
 plt.savefig("Screens/legende_cyclistes.png", format="png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
 with col2:
-    
+
     # Afficher la légende
     st.image("Screens/legende_cyclistes.png",caption="Légende des éléments de la carte")
     # Afficher la matrice
