@@ -107,6 +107,7 @@ elif selected_page == "Visualisation d'infrastructures cyclistes sur le territoi
     col1, col2 = st.columns([3, 1])  # Répartition des colonnes
 
     with col1:
+        
         # Ajouter les boutons pour afficher/masquer les couches
         show_pistes = st.checkbox("Afficher les pistes cyclables", value=True)
         show_comptages = st.checkbox("Afficher les nombres de trajets moyen journalier en vélo", value=True)

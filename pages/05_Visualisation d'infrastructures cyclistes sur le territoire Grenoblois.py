@@ -5,6 +5,7 @@ import geopandas as gpd
 from shapely.wkt import loads
 from shapely.geometry import Point
 import folium
+from streamlit_folium import st_folium
 
 # Configurer la page Streamlit
 st.set_page_config(
@@ -63,7 +64,7 @@ def load_comptages():
 # Fonction pour charger les pistes cyclables
 @st.cache_data
 def load_pistes():
-    df = pd.read_csv("BasesDeDonnées/Pistes/Pistes.csv")  # Remplacez par le chemin correct
+    df = pd.read_csv("BaseDeDonnées/Pistes/Pistes.csv")  # Remplacez par le chemin correct
     df['geometry'] = df['geometry'].apply(loads)  # Convertir WKT en géométries Shapely
     gdf = gpd.GeoDataFrame(df, geometry='geometry', crs="EPSG:3857")  # Définir le CRS actuel
     gdf = gdf.to_crs(epsg=4326)  # Reprojeter en latitude/longitude
@@ -72,7 +73,7 @@ def load_pistes():
 # Fonction pour charger les arceaux
 @st.cache_data
 def load_arceaux():
-    df = pd.read_csv("Arceaux2.csv")  # Remplacez par le chemin correct
+    df = pd.read_csv("BaseDeDonnées/Arceaux/Arceaux2.csv")  # Remplacez par le chemin correct
     df['geometry'] = df.apply(lambda row: Point(row['longitude'], row['latitude']), axis=1)
     facteur_echelle = 0.5
     df['rayon'] = facteur_echelle * df['mob_arce_nb']
@@ -82,7 +83,7 @@ def load_arceaux():
 # Fonction pour charger commune_pistes.csv
 @st.cache_data
 def load_commune_pistes():
-    df = pd.read_csv("commune_pistes.csv")  # Remplacez par le chemin correct
+    df = pd.read_csv("BaseDeDonnées/Pistes/commune_pistes.csv")  # Remplacez par le chemin correct
     return df[["Commune", "Km/densité", "Km_de_pistes"]]  # Sélectionner les colonnes souhaitées
 
 # Charger les données
@@ -102,3 +103,33 @@ with col1:
     show_pistes = st.checkbox("Afficher les pistes cyclables", value=True)
     show_comptages = st.checkbox("Afficher les nombres de trajets moyen journalier en vélo", value=True)
     show_arceaux = st.checkbox("Afficher les arceaux pour vélo", value=True)
+
+    # Créer une carte centrée sur Grenoble
+    map_center = [45.188529, 5.724524]
+    m = folium.Map(
+        location=map_center,
+        zoom_start=12,
+        tiles='CartoDB positron',
+        control_scale=True
+        )
+    # Ajouter les contours des communes
+    for _, row in communes_selectionnees.iterrows():
+        folium.GeoJson(
+            data=row["geometry"],
+            style_function=lambda x: {
+                "fillColor": "none",
+                "color": "green",
+                "weight": 2,
+                "opacity": 0.5,
+            },
+            tooltip=row.get("display_name", "Commune sans nom")
+        ).add_to(m)
+
+
+
+        # Afficher la carte
+        st_folium(m, width=800, height=600)
+        
+
+
+
