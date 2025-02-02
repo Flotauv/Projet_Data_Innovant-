@@ -124,12 +124,50 @@ with col1:
             },
             tooltip=row.get("display_name", "Commune sans nom")
         ).add_to(m)
+    # Ajouter les pistes cyclables si activé
+    if show_pistes:
+        for _, row in pistes_cyclables.iterrows():
+            if row['geometry'].geom_type == 'LineString':
+                folium.PolyLine(
+                    locations=[(coord[1], coord[0]) for coord in row['geometry'].coords],
+                    color="blue",
+                    weight=2,
+                    opacity=0.4,
+                    tooltip=f"Type: {row['type']}, Année: {row['anne_maj']}"
+                ).add_to(m)
+                
+    # Ajouter les comptages vélo si activé
+    if show_comptages:
+        for _, row in comptages.iterrows():
+            folium.CircleMarker(
+                location=(row['geometry'].y, row['geometry'].x),
+                radius=row['rayon'] * 50,
+                color="red",
+                opacity=0.5,
+                fill=True,
+                fill_color="red",
+                fill_opacity=0.6,
+                tooltip=f"TMJ: {row['tmj_2022']}"
+            
+            ).add_to(m)
+
+     # Ajouter les pistes cyclables si activé
+    if show_arceaux:
+        for _, row in arceaux.iterrows():
+            folium.CircleMarker(
+                location=(row['geometry'].y, row['geometry'].x),
+                radius=row['rayon'],
+                color="gray",
+                opacity=0.3,
+                fill=True,
+                fill_color="gray",
+                tooltip=f"Nombre d'arceaux: {row['mob_arce_nb']}"
+            ).add_to(m)
 
 
+    # Afficher la carte
+    st_folium(m, width=800, height=600)
 
-        # Afficher la carte
-        st_folium(m, width=800, height=600)
-        
 
 
 
