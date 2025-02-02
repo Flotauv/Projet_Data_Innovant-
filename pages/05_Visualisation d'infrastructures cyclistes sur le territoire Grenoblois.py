@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     page_icon=":shark:",
     menu_items={
-        'About' : 'https://www.presse-citron.net/crypto/comparatif/binance-vs-coinbase/'
+        'About' : 'https://github.com/Flotauv/Projet_Data_Innovant-'
     }
 )
 st.title("Visualisation d'infrastructures cyclistes sur le territoire Grenoblois")
@@ -50,7 +50,7 @@ def load_communes():
 # Fonction pour charger les comptages vélo
 @st.cache_data
 def load_comptages():
-    df = pd.read_csv("comptages.csv")  # Remplacez par le chemin correct
+    df = pd.read_csv("BaseDeDonnées/Comptages/comptages.csv")  # Remplacez par le chemin correct
     # Calculer les rayons des cercles proportionnels
     facteur_echelle = 0.002
     df['rayon'] = facteur_echelle * df['tmj_2022'] ** 0.5
@@ -63,7 +63,7 @@ def load_comptages():
 # Fonction pour charger les pistes cyclables
 @st.cache_data
 def load_pistes():
-    df = pd.read_csv("Pistes.csv")  # Remplacez par le chemin correct
+    df = pd.read_csv("BasesDeDonnées/Pistes/Pistes.csv")  # Remplacez par le chemin correct
     df['geometry'] = df['geometry'].apply(loads)  # Convertir WKT en géométries Shapely
     gdf = gpd.GeoDataFrame(df, geometry='geometry', crs="EPSG:3857")  # Définir le CRS actuel
     gdf = gdf.to_crs(epsg=4326)  # Reprojeter en latitude/longitude
