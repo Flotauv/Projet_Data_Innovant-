@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state='expanded'
     )
 ##Création du titre
-st.title('Introduction  : Ces villes qui ont adopté le vélo comme mobilité douce')
+st.title('Ces villes qui ont adopté le vélo comme mobilité douce')
 
 st.write('Il peut être intéressant de voir ce que certaines villes ont mis en place concernant leur ')
 ##Création de colonnes
