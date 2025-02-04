@@ -12,7 +12,7 @@ st.set_page_config(
 ##Création du titre
 st.title('Ces villes qui ont adopté le vélo comme mobilité douce')
 
-st.write('Il peut être intéressant de voir ce que certaines villes ont mis en place concernant leur ')
+st.write('Il peut être intéressant de voir quelles sont les politiques concernant le vélo dans certaines villes qualifiées de "bons élèves" ')
 ##Création de colonnes
 #col1,col2= st.columns(2)
 col_stockholm_grande , col_stockholm_petite = st.columns([3,0.1])
