@@ -1,6 +1,7 @@
 import streamlit as st 
 import pandas as pd
 import os
+import re 
 st.set_page_config(page_title='Politiques autour du vélo à Grenoble',layout='centered')
 ## Titre
 st.title("Politiques autour du vélo à Grenoble")
@@ -77,9 +78,90 @@ def fct_concat():
 
 ## Accidents
 
+### Répertoires où se situent les fichiers dans le repository
+repertory_caract = 'BaseDeDonnées/Accidents_france/Caractéristiques/'
+repertory_vehicule = 'BaseDeDonnées/Accidents_france/Véhicules/'
+
+files_vehi = [file for file in os.listdir(repertory_vehicule) if file!='.DS_Store']
+files_caract = [file for file in os.listdir(repertory_caract) if file!='.DS_Store']
+
+### Fct qui retourne la date du fichier caractéristique
+@st.cache_data()
+def fct_file_carac(file):
+    df_accident = pd.read_csv(file,sep=None,engine='python',encoding='ISO-8859-1')
+    if 'Accident_Id' in df_accident.columns:
+        df_accident = df_accident.rename(columns={'Accident_Id': 'Num_Acc'})
+    df_accident['Num_Acc'] = df_accident['Num_Acc'].astype(str)
+
+    annee = df_accident.iloc[0]['Num_Acc'][:4]
+    
+    return int(annee)
+
+### Fct qui retourne la date du fichier véhicule
+@st.cache_data()
+def fct_file_vehicule(file):
+    df_vehicule = pd.read_csv(file,sep=None,engine='python')
+    if 'Accident_Id' in df_vehicule.columns:
+        df_vehicule = df_vehicule.rename(columns ={'Accident_Id':'Num_Acc'})
+    df_vehicule['Num_Acc'] = df_vehicule['Num_Acc'].astype(str)
+    annee = df_vehicule.iloc[0]['Num_Acc'][:4]
+    return int(annee)
+
+### Fct qui indique si les fichiers ont la même date 
+@st.cache_data()
+def fct_compatibilite(file_caract,file_vehicule):
+    return fct_file_carac(file_caract)==fct_file_vehicule(file_vehicule)
+
+
+
+@st.cache_data()
+def fct_accidents(file_caracteristique, file_vehicules):
+        df_accidents = pd.read_csv(file_caracteristique, sep=None,engine='python',encoding='ISO-8859-1')
+        df_vehicules = pd.read_csv(file_vehicules, sep=None,engine='python')
+        
+        df_vehicules.columns = df_vehicules.columns.str.lower()
+        df_accidents.columns = df_accidents.columns.str.lower()
+        
+        df_accidents.columns = df_accidents.columns.str.replace(r'_','',regex=True)
+        df_vehicules.columns = df_vehicules.columns.str.replace(r'_','',regex=True)
+
+        #df_accident = pd.re
+        # Condition pour avoir les clefs primaires du même nom
+        if 'accidentid' in df_accidents.columns:
+            df_accidents = df_accidents.rename(columns={'accidentid': 'numacc'})
+        # Condition pour avoir des fichiers de même année
+        df_vehicules['numacc'] = df_vehicules['numacc'].astype(str)
+        
+        df_vehicules['numacc'] = df_vehicules['numacc'].astype(int)
+        df_accidents = df_accidents[df_accidents['dep'] == '38']
+        df_vehicules = df_vehicules[df_vehicules['catv'] == 1]
+        df_accidents_grenoble = pd.merge(df_accidents, df_vehicules, how='inner', on='numacc')
+        df_accidents_grenoble = df_accidents_grenoble[df_accidents_grenoble['catv'] == 1]
+
+        df_accidents_grenoble = df_accidents_grenoble.rename(columns={'an':'Année'})
+        df_accidents_grenoble['Année']= df_accidents_grenoble['Année'].astype(str)
+        df = df_accidents_grenoble.groupby('Année')['numacc'].count().reset_index()
+        df = df.rename(columns={'numacc':'Nombre accidents'})
+        return df
+
+def fct_concat_acc():
+    files_v = files_vehi
+    files_c = files_caract
+    df = pd.DataFrame()
+    for file_carac in files_c:
+        for file_vehi in files_v:
+            if fct_compatibilite(repertory_caract+str(file_carac),repertory_vehicule+str(file_vehi))==True:
+                df_accident = fct_accidents(repertory_caract+str(file_carac),repertory_vehicule+str(file_vehi))
+                df = pd.concat([df,df_accident],ignore_index=False)
+    return df
+    
+
+
+
 ##Création colonnes
 col_image_principale , col_image_second = st.columns([3,0.1])
 col_traffic_principale, col_traffic_second = st.columns([3,0.1])
+col_accident_principale,col_accident_second = st.columns([3,0.1])
 
 with col_image_principale:
     st.image('Screens/politiques_grenoble.jpeg')
@@ -93,5 +175,12 @@ with col_traffic_principale:
                   x_label='Axes routiers',
                   y_label='Tmja (en milliers)')
     
-    
+with col_accident_principale:
+    st.subheader('Nombre d\'accidents dans la métropole Grenobloise impliquant un vélo',divider=True)
+    st.line_chart(data=fct_concat_acc(),
+                 x='Année',
+                 y='Nombre accidents',
+                 x_label='Années',
+                 y_label='Accidents')
+
 
