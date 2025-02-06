@@ -145,6 +145,7 @@ def fct_accidents(file_caracteristique, file_vehicules):
         return df
 
 ### Fct de concaténation qui prend du temps notamment du aux boucles (À optimiser si possible )
+@st.cache_data()
 def fct_concat_acc():
     files_v = files_vehi
     files_c = files_caract
@@ -158,12 +159,51 @@ def fct_concat_acc():
     
 
 
+## Polution 
+repertory_pollution = 'BaseDeDonnées/Pollution/Mesure_air/' #à changer certainement 
+
+@st.cache_data()
+def fct_pollution(file):
+    df = pd.read_csv(file,sep=None,engine='python')
+    df.columns = df.columns.str.lower()
+    df['date_ech']= pd.to_datetime(df['date_ech'])
+    df['annee']=df['date_ech'].dt.year
+    df['etat'] = df['etat'].astype(str)
+    df['annee']=df['annee'].astype(str)
+    df['com_court']=df['com_court'].astype(str)
+    df=df[df['lib_zone']=='Bassin Grenoblois']
+    df = df.groupby(['annee','etat'])['com_court'].count().reset_index()
+    df = df.rename(columns = {'com_court':'Nombre_observations'})
+    
+    return df
+
+
+@st.cache_data()
+def fct_concat_pollution():
+    df = pd.DataFrame()
+    for file in os.listdir(repertory_pollution):
+        if file !='.DS_Store':
+            df_pollution = fct_pollution(repertory_pollution+str(file))
+            df=pd.concat([df,df_pollution],ignore_index=True)
+    return df 
+
 
 ##Création colonnes
 col_image_principale , col_image_second = st.columns([3,0.1])
 col_traffic_principale, col_traffic_second = st.columns([3,0.1])
 col_accident_principale,col_accident_second = st.columns([3,0.1])
+col_pollution_princiaple,col_pollution_second = st.columns([3,0.1])
 col_source_principale,col_source_second = st.columns([3,0.1])
+
+
+
+
+
+
+
+
+
+
 with col_image_principale:
     st.image('Screens/politiques_grenoble.jpeg')
     st.write('Plusieurs mesures phares qui englobent un large périmètre')
@@ -185,6 +225,14 @@ with col_accident_principale:
                  x_label='Années',
                  y_label='Accidents')
 
-
+with col_pollution_princiaple:
+    st.subheader('Nombre de relevés et états de pollution de l\'agglomération Grenobloise',divider=True)
+    st.bar_chart(data=fct_concat_pollution(),
+                 x='annee',
+                 y='Nombre_observations',
+                 color='etat',
+                 x_label='Année',
+                 y_label='Nombre de relevés')
+    
 with col_source_principale:
     st.header('Sources',divider=True)
