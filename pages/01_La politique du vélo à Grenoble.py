@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 import re 
-st.set_page_config(page_title='Politiques autour du vélo à Grenoble',layout='centered')
+st.set_page_config(page_title='Politiques autour du vélo à Grenoble',layout='wide')
 ## Titre
 st.title("Politiques autour du vélo à Grenoble")
 
