@@ -13,7 +13,7 @@ st.write("Cette page présente les mesures phare qui ont pu être prises pour fa
 ### Affichage du traffic routier
 
 #### Chemin du dossier 
-
+#source : https://www.data.gouv.fr/fr/datasets/trafic-moyen-journalier-annuel-sur-le-reseau-routier-national/'
 repertory_traffic = 'BaseDeDonnées/Traffic_routier/'
 
 #### Fonction qui retourne les axes routiers de Grenoble et leur taux moyens journaliers sur l'année
@@ -77,7 +77,7 @@ def fct_concat():
 
 
 ## Accidents
-
+#source : https://www.data.gouv.fr/fr/datasets/bases-de-donnees-annuelles-des-accidents-corporels-de-la-circulation-routiere-annees-de-2005-a-2023/
 ### Répertoires où se situent les fichiers dans le repository
 repertory_caract = 'BaseDeDonnées/Accidents_france/Caractéristiques/'
 repertory_vehicule = 'BaseDeDonnées/Accidents_france/Véhicules/'
@@ -144,6 +144,7 @@ def fct_accidents(file_caracteristique, file_vehicules):
         df = df.rename(columns={'numacc':'Nombre accidents'})
         return df
 
+### Fct de concaténation qui prend du temps notamment du aux boucles (À optimiser si possible )
 def fct_concat_acc():
     files_v = files_vehi
     files_c = files_caract
@@ -162,7 +163,7 @@ def fct_concat_acc():
 col_image_principale , col_image_second = st.columns([3,0.1])
 col_traffic_principale, col_traffic_second = st.columns([3,0.1])
 col_accident_principale,col_accident_second = st.columns([3,0.1])
-
+col_source_principale,col_source_second = st.columns([3,0.1])
 with col_image_principale:
     st.image('Screens/politiques_grenoble.jpeg')
     st.write('Plusieurs mesures phares qui englobent un large périmètre')
@@ -174,6 +175,7 @@ with col_traffic_principale:
                   color='annee',
                   x_label='Axes routiers',
                   y_label='Tmja (en milliers)')
+
     
 with col_accident_principale:
     st.subheader('Nombre d\'accidents dans la métropole Grenobloise impliquant un vélo',divider=True)
@@ -184,3 +186,5 @@ with col_accident_principale:
                  y_label='Accidents')
 
 
+with col_source_principale:
+    st.header('Sources',divider=True)
