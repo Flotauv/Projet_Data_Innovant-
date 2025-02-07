@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 import re 
+import altair as alt
 st.set_page_config(page_title='Politiques autour du vélo à Grenoble',layout='wide')
 ## Titre
 st.title("Politiques autour du vélo à Grenoble")
@@ -165,16 +166,34 @@ repertory_pollution = 'BaseDeDonnées/Pollution/Mesure_air/' #à changer certain
 @st.cache_data()
 def fct_pollution(file):
     df = pd.read_csv(file,sep=None,engine='python')
+    
+    ## Colonnes misent en minuscule
     df.columns = df.columns.str.lower()
     df['date_ech']= pd.to_datetime(df['date_ech'])
     df['annee']=df['date_ech'].dt.year
+    
+    ## Opérations sur les états 
     df['etat'] = df['etat'].astype(str)
-    df['annee']=df['annee'].astype(str)
-    df['com_court']=df['com_court'].astype(str)
+    df['etat'] = df['etat'].replace('ALERTE SUR PERSISTANCE','ALERTE')
+    df = df.rename(columns={'etat':'État de pollution'})
+    df['com_court'].astype(str)
     df=df[df['lib_zone']=='Bassin Grenoblois']
-    df = df.groupby(['annee','etat'])['com_court'].count().reset_index()
+    
+    #Création premier dataframe groupé
+    df = df.groupby(['annee','État de pollution'])['com_court'].count().reset_index()
     df = df.rename(columns = {'com_court':'Nombre_observations'})
     
+    ## Création deuxième df 
+    df_2 = df.groupby('annee')['Nombre_observations'].sum().reset_index()
+    df_2 = df_2.rename(columns = {'Nombre_observations':'Nombre total observations'})
+    
+    ## Fusion des deux dataframes
+    df = pd.merge(df,df_2,on='annee',how='left')
+    
+    ##Création de la colonne ratio
+    df['Ratio'] = round(df['Nombre_observations']/df['Nombre total observations']*100)
+    
+    df = df.rename(columns = {'annee':'Années'})
     return df
 
 
@@ -185,22 +204,23 @@ def fct_concat_pollution():
         if file !='.DS_Store':
             df_pollution = fct_pollution(repertory_pollution+str(file))
             df=pd.concat([df,df_pollution],ignore_index=True)
+    df['Années']=df['Années'].astype(str)
     return df 
 
 ## Comptage 
-
+@st.cache_data
 def fct_comptage_pietons_permanents(file):
     df = pd.read_csv(file,sep=None,engine='python')
-    #df_concat_1 = df[['id','nom_comm']]
+    df=df[df['nom_comm']=='Grenoble']
     colonnes = df.columns[df.columns.str.startswith('tmj_')]
     colonnes = colonnes.tolist()
     colonnes.append('id')
-    colonnes.append('nom_comm')
+    colonnes.append('localisation')
     df= df[colonnes]
     #df = pd.concat([df_concat_1,df_concat_2],ignore_index=False)
     colonnes = df.columns[df.columns.str.startswith('tmj_')]
-    df = df.groupby('nom_comm')[colonnes].mean().reset_index()
-    df = df.melt(id_vars='nom_comm',value_name='valeur',var_name='tmj')
+    df = df.groupby('localisation')[colonnes].mean().reset_index()
+    df = df.melt(id_vars='localisation',value_name='valeur',var_name='tmj')
     return df
     
 ##Création colonnes
@@ -245,15 +265,25 @@ with col_accident_principale:
 
 with col_pollution_princiaple:
     st.subheader('Nombre de relevés et états de pollution de l\'agglomération Grenobloise',divider=True)
-    st.bar_chart(data=fct_concat_pollution(),
-                 x='annee',
-                 y='Nombre_observations',
-                 color='etat',
-                 x_label='Année',
-                 y_label='Nombre de relevés')
+    chart = alt.Chart(fct_concat_pollution()).mark_bar().encode(
+        x='Années',
+        y='Nombre_observations',
+        color=alt.Color('État de pollution',scale=alt.Scale(
+            domain=['PAS DE DEPASSEMENT','ALERTE'],
+            range=['green','red'])
+            )
+    ).properties(width = 900 ,height = 500 )
+    st.altair_chart(chart)
+
+    
     
 with col_comptage_pietons_permanent_principale:
+    st.subheader(body='Comptage du nombre de piétons par jours annualisé suivant différentes zones géographiques de Grenoble',divider=True)
     st.bar_chart(data=fct_comptage_pietons_permanents('BaseDeDonnées/Comptage_mode_deplacement/comptages_pietons_permanents.csv'),
                   x='tmj',
                   y='valeur',
-                  color='nom_comm')
+                  color='localisation',
+                  x_label='Années',
+                  y_label='Taux moyen journalier (en milliers)',
+                  width=900,
+                  height=500)
