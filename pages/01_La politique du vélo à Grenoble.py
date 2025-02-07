@@ -208,7 +208,9 @@ def fct_concat_pollution():
     return df 
 
 ## Comptage 
-@st.cache_data
+
+### piétons permanents
+@st.cache_data()
 def fct_comptage_pietons_permanents(file):
     df = pd.read_csv(file,sep=None,engine='python')
     df=df[df['nom_comm']=='Grenoble']
@@ -220,17 +222,41 @@ def fct_comptage_pietons_permanents(file):
     #df = pd.concat([df_concat_1,df_concat_2],ignore_index=False)
     colonnes = df.columns[df.columns.str.startswith('tmj_')]
     df = df.groupby('localisation')[colonnes].mean().reset_index()
-    df = df.melt(id_vars='localisation',value_name='valeur',var_name='tmj')
+    df = df.rename(columns={'localisation':'Localisation'})
+
+    df = df.melt(id_vars='Localisation',value_name='valeur',var_name='tmj')
     return df
-    
+
+### vélos permanents 
+@st.cache_data()
+def fct_comptage_velos_permanents(file):
+    df = pd.read_csv(file,sep=None,engine='python')
+    df=df[df['nom_comm']=='Grenoble']
+    df=df.dropna()
+    colonnes = df.columns[df.columns.str.startswith('tmj')]
+    colonnes = colonnes.tolist()
+    colonnes.append('id')
+    colonnes.append('localisation')
+    df= df[colonnes]
+    #df = pd.concat([df_concat_1,df_concat_2],ignore_index=False)
+    colonnes = df.columns[df.columns.str.startswith('tmj_')]
+    df = df.groupby('localisation')[colonnes].mean().reset_index()
+    df = df.rename(columns={'localisation':'Localisation'})
+    df = df.melt(id_vars='Localisation',value_name='valeur',var_name='tmj')
+    return df
+
+
+
+
+
 ##Création colonnes
 col_image_principale , col_image_second = st.columns([3,0.1])
 col_traffic_principale, col_traffic_second = st.columns([3,0.1])
 col_accident_principale,col_accident_second = st.columns([3,0.1])
 col_pollution_princiaple,col_pollution_second = st.columns([3,0.1])
 #col_source_principale,col_source_second = st.columns([3,0.1])
-col_comptage_pietons_permanent_principale , col_comptage_pietons_permannent_second = st.columns([3,0.1])
-
+col_comptage_pietons_permanent_principale , col_comptage_pietons_permanent_second = st.columns([3,0.1])
+col_comptage_vélos_permanent_principale , col_comptage_vélos_permanent_second = st.columns([3,0.1])
 
 
 
@@ -241,7 +267,7 @@ col_comptage_pietons_permanent_principale , col_comptage_pietons_permannent_seco
 
 
 with col_image_principale:
-    st.image('Screens/politiques_grenoble.jpeg')
+    st.image('Screens/politiques_grenoble.jpeg',use_container_width=True)
     st.write('Plusieurs mesures phares qui englobent un large périmètre')
 
     
@@ -252,7 +278,10 @@ with col_traffic_principale:
                   y='Taux Moyen Journalier Annualisé (en Millions)',
                   color='annee',
                   x_label='Axes routiers',
-                  y_label='Tmja (en milliers)')
+                  y_label='Tmja (en milliers)',
+                  width=900,
+                  height=500
+                  )
 
     
 with col_accident_principale:
@@ -261,7 +290,9 @@ with col_accident_principale:
                  x='Année',
                  y='Nombre accidents',
                  x_label='Années',
-                 y_label='Accidents')
+                 y_label='Accidents',
+                 width=900,
+                 height=500)
 
 with col_pollution_princiaple:
     st.subheader('Nombre de relevés et états de pollution de l\'agglomération Grenobloise',divider=True)
@@ -282,8 +313,20 @@ with col_comptage_pietons_permanent_principale:
     st.bar_chart(data=fct_comptage_pietons_permanents('BaseDeDonnées/Comptage_mode_deplacement/comptages_pietons_permanents.csv'),
                   x='tmj',
                   y='valeur',
-                  color='localisation',
+                  color='Localisation',
                   x_label='Années',
                   y_label='Taux moyen journalier (en milliers)',
                   width=900,
                   height=500)
+    
+with col_comptage_vélos_permanent_principale:
+    st.subheader(body='Évolution du nombre de vélos par jours annualisé suivant différentes zones au sein de Grenoble',divider=True)
+    st.bar_chart(data=fct_comptage_velos_permanents('BaseDeDonnées/Comptage_mode_deplacement/comptages_velos_permanents.csv'),
+                 x='tmj',
+                 y='valeur',
+                 x_label='Années',
+                 y_label='Taux moyen journalier (en milliers)',
+                 color='Localisation',
+                 width=900,
+                 height=500)
+    
