@@ -187,13 +187,29 @@ def fct_concat_pollution():
             df=pd.concat([df,df_pollution],ignore_index=True)
     return df 
 
+## Comptage 
 
+def fct_comptage_pietons_permanents(file):
+    df = pd.read_csv(file,sep=None,engine='python')
+    #df_concat_1 = df[['id','nom_comm']]
+    colonnes = df.columns[df.columns.str.startswith('tmj_')]
+    colonnes = colonnes.tolist()
+    colonnes.append('id')
+    colonnes.append('nom_comm')
+    df= df[colonnes]
+    #df = pd.concat([df_concat_1,df_concat_2],ignore_index=False)
+    colonnes = df.columns[df.columns.str.startswith('tmj_')]
+    df = df.groupby('nom_comm')[colonnes].mean().reset_index()
+    df = df.melt(id_vars='nom_comm',value_name='valeur',var_name='tmj')
+    return df
+    
 ##Création colonnes
 col_image_principale , col_image_second = st.columns([3,0.1])
 col_traffic_principale, col_traffic_second = st.columns([3,0.1])
 col_accident_principale,col_accident_second = st.columns([3,0.1])
 col_pollution_princiaple,col_pollution_second = st.columns([3,0.1])
-col_source_principale,col_source_second = st.columns([3,0.1])
+#col_source_principale,col_source_second = st.columns([3,0.1])
+col_comptage_pietons_permanent_principale , col_comptage_pietons_permannent_second = st.columns([3,0.1])
 
 
 
@@ -207,6 +223,8 @@ col_source_principale,col_source_second = st.columns([3,0.1])
 with col_image_principale:
     st.image('Screens/politiques_grenoble.jpeg')
     st.write('Plusieurs mesures phares qui englobent un large périmètre')
+
+    
 with col_traffic_principale:
     st.subheader('Évolution du traffic autour de Grenoble',divider=True)
     st.bar_chart(data=fct_concat(),
@@ -234,5 +252,8 @@ with col_pollution_princiaple:
                  x_label='Année',
                  y_label='Nombre de relevés')
     
-with col_source_principale:
-    st.header('Sources',divider=True)
+with col_comptage_pietons_permanent_principale:
+    st.bar_chart(data=fct_comptage_pietons_permanents('BaseDeDonnées/Comptage_mode_deplacement/comptages_pietons_permanents.csv'),
+                  x='tmj',
+                  y='valeur',
+                  color='nom_comm')
