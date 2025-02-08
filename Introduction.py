@@ -11,7 +11,8 @@ st.set_page_config(
     )
 ##Création du titre
 st.title('Ces villes qui ont adopté le vélo comme mobilité douce')
-
+### Image des politiques nationales voulues pour la France 
+st.image('Screens/politiques_nationales.jpeg',width=900)
 st.write('Il peut être intéressant de voir quelles sont les politiques concernant le vélo dans certaines villes qualifiées de "bons élèves" ')
 ##Création de colonnes
 #col1,col2= st.columns(2)
