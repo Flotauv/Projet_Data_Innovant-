@@ -1,4 +1,5 @@
 import pandas as pd
+import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import streamlit as st 
@@ -88,23 +89,40 @@ def load_commune_pistes():
     df = pd.read_csv("BaseDeDonnées/Pistes/commune_pistes.csv")  # Remplacez par le chemin correct
     return df[["Commune", "Km/densité", "Km_de_pistes"]]  # Sélectionner les colonnes souhaitées
 
+
+@st.cache_data()
+def load_station_metro_velo():
+    df = pd.read_csv("BaseDeDonnées/Stations_MetroVelo/velo_0.csv")
+    df['latitude'] = [element[0] for element in df['geo_point_2d'].str.split(',')]
+    df['longitude'] = [element[1] for element in df['geo_point_2d'].str.split(',')]
+    df['rayon'] = [0.05 for element in df['longitude']]
+    return df 
+
 # Charger les données
 communes_selectionnees = load_communes()
 pistes_cyclables = load_pistes()
 comptages = load_comptages()
 arceaux = load_arceaux()
 commune_pistes = load_commune_pistes()
+stations_metro_velos = load_station_metro_velo()
 
+# Ajouter les boutons pour afficher/masquer les couches
+show_pistes = st.checkbox("Afficher les pistes cyclables", value=True)
+show_comptages = st.checkbox("Afficher les nombres de trajets moyen journalier en vélo", value=True)
+show_arceaux = st.checkbox("Afficher les arceaux pour vélo", value=True)
+show_stations_metro_velo = st.checkbox("Afficher les stations MétroVélo",value=True)
 
 ## Création des colonnes pour afficher nos graphiques
-col1,col2 = st.columns([3,1])
+col_map,col_legende = st.columns([4,1])
+col_df_principale,col_df_second = st.columns([3,1])
 
 
-with col1:
+with col_map:
     # Ajouter les boutons pour afficher/masquer les couches
-    show_pistes = st.checkbox("Afficher les pistes cyclables", value=True)
-    show_comptages = st.checkbox("Afficher les nombres de trajets moyen journalier en vélo", value=True)
-    show_arceaux = st.checkbox("Afficher les arceaux pour vélo", value=True)
+    #show_pistes = st.checkbox("Afficher les pistes cyclables", value=True)
+    #show_comptages = st.checkbox("Afficher les nombres de trajets moyen journalier en vélo", value=True)
+    #show_arceaux = st.checkbox("Afficher les arceaux pour vélo", value=True)
+    #show_stations_metro_velo = st.checkbox("Afficher les stations MétroVélo",value=True)
 
     # Créer une carte centrée sur Grenoble
     map_center = [45.188529, 5.724524]
@@ -166,6 +184,15 @@ with col1:
                 tooltip=f"Nombre d'arceaux: {row['mob_arce_nb']}"
             ).add_to(m)
 
+    if show_stations_metro_velo:
+        for _, row in stations_metro_velos.iterrows():
+            folium.CircleMarker(
+                location =[row['latitude'],row['longitude']],
+                rayon=row['rayon'],
+                fill=True,
+                color='yellow',
+                fill_color='gray',
+                tooltip=f"Localisation :{row['adresse']}").add_to(m)
 
     # Afficher la carte
     st_folium(m, width=800, height=600)
@@ -196,10 +223,12 @@ ax.legend(
 plt.savefig("Screens/legende_cyclistes.png", format="png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
-with col2:
+with col_legende:
 
     # Afficher la légende
     st.image("Screens/legende_cyclistes.png",caption="Légende des éléments de la carte")
+
+with col_df_principale:
     # Afficher la matrice
     st.write("### Données des communes et pistes cyclables")
     st.dataframe(commune_pistes)
