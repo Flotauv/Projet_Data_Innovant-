@@ -20,58 +20,50 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Charger les données
+df_merged = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
 
-df = pd.read_excel("BaseDeDonnées/df_merged.xlsx", engine="openpyxl")
+# Définition des années et des colonnes concernées
+years = ["2020", "2021", "2023", "2024"]
+year_columns = [f"Proportion Occurrences (%) {year}" for year in years]
 
-# Vérifier si les colonnes nécessaires existent
-required_columns = [
-    "Proportion Occurrences (%) 2020",
-    "Proportion Occurrences (%) 2021",
-    "Proportion Occurrences (%) 2023",
-    "Proportion Occurrences (%) 2024"
-]
+# Définir des couleurs bien distinctes pour chaque année
+year_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]  # Bleu, Orange, Vert, Rouge
 
-if all(col in df.columns for col in required_columns):
+# Interface utilisateur Streamlit
+st.title("📊 Histogramme des Modes de Transport (2020 - 2024)")
+st.write("Affichage des proportions d'occurrences (%) des modes de transport sur 4 années.")
 
-    # Titre de l'application
-    st.title("Histogramme des Modes de Transport (2020 - 2024)")
+# Création du graphique avec de nouvelles couleurs
+fig, ax = plt.subplots(figsize=(14, 7))
 
-    # Définir les années et leurs couleurs associées
-    years = ["2020", "2021", "2023", "2024"]
-    colors = plt.cm.get_cmap("tab10", len(df))  # Utilisation d'une colormap pour assigner des couleurs uniques
+# Position des barres
+bar_width = 0.2
+x = np.arange(len(df_merged))  # Indices des modes de transport
 
-    # Création du graphique
-    fig, ax = plt.subplots(figsize=(10, 6))
+# Boucle sur les années pour tracer les histogrammes avec des couleurs bien distinctes
+for i, (year, color) in enumerate(zip(years, year_colors)):
+    ax.bar(
+        x + i * bar_width,
+        df_merged[year_columns[i]],
+        width=bar_width,
+        label=f"Année {year}",
+        color=color  # Utilisation des nouvelles couleurs distinctes
+    )
 
-    # Position des barres
-    bar_width = 0.2
-    x = np.arange(len(df))  # Indices des modes de transport
+# Configuration des axes et légendes
+ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
+ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
+ax.set_ylabel("Proportion Occurrences (%)")
+ax.set_title("Proportion d'Occurrences par Mode de Transport (2020 - 2024)")
+ax.legend()
 
-    # Boucle sur les années pour tracer les histogrammes avec des couleurs différentes
-    for i, year in enumerate(years):
-        ax.bar(
-            x + i * bar_width,
-            df[f"Proportion Occurrences (%) {year}"],
-            width=bar_width,
-            label=f"Année {year}",
-            color=colors(i)  # Attribuer une couleur différente à chaque transport
-        )
+# Afficher le graphique dans Streamlit
+st.pyplot(fig)
 
-    # Labels et légendes
-    ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
-    ax.set_xticklabels(df["Mode de Transport"], rotation=45, ha="right")
-    ax.set_ylabel("Proportion (%)")
-    ax.set_title("Proportion d'Occurrences par Mode de Transport (2020 - 2024)")
-    ax.legend()
+# Message final
+st.write("📊 Données basées sur l'année 2020, 2021, 2023 et 2024")
 
-    # Afficher le graphique dans Streamlit
-    st.pyplot(fig)
-
-else:
-    st.error("Les colonnes des proportions pour les années 2020, 2021, 2023 et 2024 sont introuvables dans le fichier.")
-
-# Message de fin
-st.write("📊 Données basées sur les années 2020, 2021, 2023 et 2024")
 
 
 st.header("La distance parcourue influence-t-elle le choix du mode de transport ? Que représente chaque moyen de transport dans le kilométrage total ?")
