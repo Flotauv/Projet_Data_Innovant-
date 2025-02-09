@@ -61,8 +61,6 @@ ax.legend()
 # Afficher le graphique dans Streamlit
 st.pyplot(fig)
 
-# Message final
-st.write("📊 Données basées sur l'année 2020, 2021, 2023 et 2024")
 
 
 
@@ -107,7 +105,5 @@ ax.legend()
 # Afficher le graphique dans Streamlit
 st.pyplot(fig)
 
-# Message final
-st.write("📊 Données basées sur les années 2020, 2021, 2023 et 2024")
 
 st.write("Ajoutez ici une étude temporelle détaillée sur l'INP. Vous pouvez inclure des graphiques ou des analyses basées sur les données temporelles.")
