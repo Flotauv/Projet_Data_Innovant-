@@ -15,7 +15,7 @@ ainsi que celles provenant de Copenhague, cette dernière étant considérée co
 st.markdown("**_Les visualisations utilisent les données du Challenge mobilité sur cinq années : 2020 (149 répondants), 2021 (735), 2022 (), 2023 (412), 2024 (424)_**")
 
 
-st.header("Quelles sont les modes de transport utilisés par les usagers de l'INP (étudiants et personnels) ?")
+st.header("Quelles sont les modes de transport utilisés par les usagers de l'INP (étudiants et personnels) ? (en finition)")
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -61,10 +61,11 @@ ax.legend()
 # Afficher le graphique dans Streamlit
 st.pyplot(fig)
 
+st.header("Quel impact a le challenge mobilité sur les déplacements ? (en cours)")
 
 
 
-st.header("La distance parcourue influence-t-elle le choix du mode de transport ? Que représente chaque moyen de transport dans le kilométrage total ?")
+st.header("La distance parcourue influence-t-elle le choix du mode de transport ? Que représente chaque moyen de transport dans le kilométrage total ? (en finition)")
 
 
 # Définition des années et des colonnes concernées pour la Distance Totale
@@ -104,6 +105,16 @@ ax.legend()
 
 # Afficher le graphique dans Streamlit
 st.pyplot(fig)
+
+st.header("Les matrices des choix de transport en fonction du type de distance (en cours)")
+
+st.header("Que nous révèles les données de l'UGA ? (en cours)")
+
+st.header("Comparaison avec Copenhague (en cours, dépend du temps restant)")
+
+
+
+st.header("Les raisons qui poussent aux choix des transports utilisés (en cours)")
 
 
 st.write("Ajoutez ici une étude temporelle détaillée sur l'INP. Vous pouvez inclure des graphiques ou des analyses basées sur les données temporelles.")
