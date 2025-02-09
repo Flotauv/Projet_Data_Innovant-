@@ -9,6 +9,9 @@ Cette enquête compare le trajet quotidien d'un usager de l'INP, réalisé tout 
 avec le trajet effectué lors d'une journée dédiée au challenge, où l'usager doit tenter d'utiliser des modes de transport écologiques.
     """
 )
+st.write("""Nous compléterons nos visualisations avec celles issues de l'ensemble de l'Université Grenoble Alpes (plus de 57 000 étudiants),
+ainsi que celles provenant de Copenhague, cette dernière étant considérée comme un modèle en matière de mobilité durable.""")
+
 st.markdown("**_Les visualisations utilisent les données du Challenge mobilité sur cinq années : 2020 (149 répondants), 2021 (735), 2022 (), 2023 (412), 2024 (424)_**")
 
 
