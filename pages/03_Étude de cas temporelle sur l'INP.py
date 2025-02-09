@@ -20,7 +20,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_excel(file_path)
+df = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
 
 # Vérifier si les colonnes nécessaires existent
 required_columns = [
