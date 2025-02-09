@@ -68,4 +68,46 @@ st.write("📊 Données basées sur l'année 2020, 2021, 2023 et 2024")
 
 st.header("La distance parcourue influence-t-elle le choix du mode de transport ? Que représente chaque moyen de transport dans le kilométrage total ?")
 
+
+# Définition des années et des colonnes concernées pour la Distance Totale
+years = ["2020", "2021", "2023", "2024"]
+distance_columns = [f"Proportion Distance Totale (%) {year}" for year in years]
+
+# Définir des couleurs bien distinctes pour chaque année
+year_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]  # Bleu, Orange, Vert, Rouge
+
+# Interface utilisateur Streamlit
+st.title("📊 Histogramme des Distances Totales par Mode de Transport (2020 - 2024)")
+st.write("Affichage des proportions de distance totale (%) parcourues par mode de transport sur 4 années.")
+
+# Création du graphique avec de nouvelles couleurs
+fig, ax = plt.subplots(figsize=(14, 7))
+
+# Position des barres
+bar_width = 0.2
+x = np.arange(len(df_merged))  # Indices des modes de transport
+
+# Boucle sur les années pour tracer les histogrammes avec des couleurs bien distinctes
+for i, (year, color) in enumerate(zip(years, year_colors)):
+    ax.bar(
+        x + i * bar_width,
+        df_merged[distance_columns[i]],
+        width=bar_width,
+        label=f"Année {year}",
+        color=color  # Utilisation des nouvelles couleurs distinctes
+    )
+
+# Configuration des axes et légendes
+ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
+ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
+ax.set_ylabel("Proportion Distance Totale (%)")
+ax.set_title("Proportion de la Distance Totale par Mode de Transport (2020 - 2024)")
+ax.legend()
+
+# Afficher le graphique dans Streamlit
+st.pyplot(fig)
+
+# Message final
+st.write("📊 Données basées sur les années 2020, 2021, 2023 et 2024")
+
 st.write("Ajoutez ici une étude temporelle détaillée sur l'INP. Vous pouvez inclure des graphiques ou des analyses basées sur les données temporelles.")
