@@ -10,4 +10,5 @@ datetime
 osmnx==2.0.1
 geopandas==1.0.1
 matplotlib
+openpyxl
 
