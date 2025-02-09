@@ -19,10 +19,9 @@ st.header("Quelles sont les modes de transport utilisés par les usagers de l'IN
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-pip install openpyxl
 
 
-df = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
+df = pd.read_excel("BaseDeDonnées/df_merged.xlsx", engine="openpyxl")
 
 # Vérifier si les colonnes nécessaires existent
 required_columns = [
