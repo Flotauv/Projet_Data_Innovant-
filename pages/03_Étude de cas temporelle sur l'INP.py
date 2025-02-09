@@ -16,6 +16,63 @@ st.markdown("**_Les visualisations utilisent les données du Challenge mobilité
 
 
 st.header("Quelles sont les modes de transport utilisés par les usagers de l'INP (étudiants et personnels) ?")
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+df = pd.read_excel(file_path)
+
+# Vérifier si les colonnes nécessaires existent
+required_columns = [
+    "Proportion Occurrences (%) 2020",
+    "Proportion Occurrences (%) 2021",
+    "Proportion Occurrences (%) 2023",
+    "Proportion Occurrences (%) 2024"
+]
+
+if all(col in df.columns for col in required_columns):
+
+    # Titre de l'application
+    st.title("Histogramme des Modes de Transport (2020 - 2024)")
+
+    # Définir les années et leurs couleurs associées
+    years = ["2020", "2021", "2023", "2024"]
+    colors = plt.cm.get_cmap("tab10", len(df))  # Utilisation d'une colormap pour assigner des couleurs uniques
+
+    # Création du graphique
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Position des barres
+    bar_width = 0.2
+    x = np.arange(len(df))  # Indices des modes de transport
+
+    # Boucle sur les années pour tracer les histogrammes avec des couleurs différentes
+    for i, year in enumerate(years):
+        ax.bar(
+            x + i * bar_width,
+            df[f"Proportion Occurrences (%) {year}"],
+            width=bar_width,
+            label=f"Année {year}",
+            color=colors(i)  # Attribuer une couleur différente à chaque transport
+        )
+
+    # Labels et légendes
+    ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
+    ax.set_xticklabels(df["Mode de Transport"], rotation=45, ha="right")
+    ax.set_ylabel("Proportion (%)")
+    ax.set_title("Proportion d'Occurrences par Mode de Transport (2020 - 2024)")
+    ax.legend()
+
+    # Afficher le graphique dans Streamlit
+    st.pyplot(fig)
+
+else:
+    st.error("Les colonnes des proportions pour les années 2020, 2021, 2023 et 2024 sont introuvables dans le fichier.")
+
+# Message de fin
+st.write("📊 Données basées sur les années 2020, 2021, 2023 et 2024")
+
+
 st.header("La distance parcourue influence-t-elle le choix du mode de transport ? Que représente chaque moyen de transport dans le kilométrage total ?")
 
 st.write("Ajoutez ici une étude temporelle détaillée sur l'INP. Vous pouvez inclure des graphiques ou des analyses basées sur les données temporelles.")
