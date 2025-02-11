@@ -6,9 +6,11 @@ import streamlit as st
 import osmnx as ox 
 import geopandas as gpd
 from shapely.wkt import loads
-from shapely.geometry import Point
+from shapely.geometry import Point,LineString
 import folium
 from streamlit_folium import st_folium
+import json
+import unicodedata
 
 # Configurer la page Streamlit
 st.set_page_config(
@@ -24,7 +26,7 @@ st.title("Visualisation d'infrastructures cyclistes sur le territoire Grenoblois
 
 ## Définition des fonctions utiles à la page : 
 
-# Fonction pour charger les contours des communes
+### Partie affichage de carte 
 @st.cache_data
 def load_communes():
     communes_cibles = [
@@ -87,7 +89,7 @@ def load_arceaux():
 @st.cache_data
 def load_commune_pistes():
     df = pd.read_csv("BaseDeDonnées/Pistes/commune_pistes.csv")  # Remplacez par le chemin correct
-    return df[["Commune", "Km/densité", "Km_de_pistes"]]  # Sélectionner les colonnes souhaitées
+    return df # Sélectionner les colonnes souhaitées
 
 
 @st.cache_data()
@@ -106,6 +108,7 @@ arceaux = load_arceaux()
 commune_pistes = load_commune_pistes()
 stations_metro_velos = load_station_metro_velo()
 
+st.subheader("Filtres")
 # Ajouter les boutons pour afficher/masquer les couches
 show_pistes = st.checkbox("Afficher les pistes cyclables", value=True)
 show_comptages = st.checkbox("Afficher les nombres de trajets moyen journalier en vélo", value=True)
@@ -114,15 +117,11 @@ show_stations_metro_velo = st.checkbox("Afficher les stations MétroVélo",value
 
 ## Création des colonnes pour afficher nos graphiques
 col_map,col_legende = st.columns([4,1])
-col_df_principale,col_df_second = st.columns([3,1])
+col_df_principale,col_df_second = st.columns([3,0.1])
 
 
 with col_map:
-    # Ajouter les boutons pour afficher/masquer les couches
-    #show_pistes = st.checkbox("Afficher les pistes cyclables", value=True)
-    #show_comptages = st.checkbox("Afficher les nombres de trajets moyen journalier en vélo", value=True)
-    #show_arceaux = st.checkbox("Afficher les arceaux pour vélo", value=True)
-    #show_stations_metro_velo = st.checkbox("Afficher les stations MétroVélo",value=True)
+    st.subheader("Cartographie des infrastructures cyclables dans l'agglomération Grenobloise",divider=True)
 
     # Créer une carte centrée sur Grenoble
     map_center = [45.188529, 5.724524]
@@ -224,14 +223,20 @@ plt.savefig("Screens/legende_cyclistes.png", format="png", bbox_inches="tight", 
 plt.close(fig)
 
 with col_legende:
-
+    st.subheader(" ")
+    st.write("                                                ")
+    st.write("                                                ")
     # Afficher la légende
     st.image("Screens/legende_cyclistes.png",caption="Légende des éléments de la carte")
 
 with col_df_principale:
     # Afficher la matrice
-    st.write("### Données des communes et pistes cyclables")
+    st.subheader("Données relatives aux communes",divider =True)
     st.dataframe(commune_pistes)
+
+    st.scatter_chart(data=commune_pistes,
+                     x='Commune',
+                     y='Km/habitants')
 
 
 
