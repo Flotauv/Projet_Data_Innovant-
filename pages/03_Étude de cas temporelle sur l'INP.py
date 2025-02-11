@@ -2,17 +2,15 @@ import streamlit as st
 
 
 ### Configuration de la page 
-st.set_page_config(page_title = "Étude de cas temporelle sur l'INP et l'UGA",layout="wide")
+st.set_page_config(page_title = "Étude de cas temporelle sur l'INP",layout="wide")
 # Titres 
-st.title("Etude de cas temporelle sur l'INP et l'UGA")
+st.title("Etude de cas temporelle sur l'INP")
 st.write("Cette page présente une analyse des données de l'INP, groupe d'écoles de l'Université Grenoble Alpes.")
     
 st.write("Les visualisations s'appuient sur une enquête intitulée 'Challenge mobilité' ")
 st.write("Cette enquête compare les trajets de personnes faisant partie de  l'INP se rendant sur leur lieu de travail/étude via différents modes de transport")
-st.write("""Nous compléterons nos visualisations avec celles issues de l'ensemble de l'Université Grenoble Alpes (plus de 57 000 étudiants),
-ainsi que celles provenant de Copenhague, cette dernière étant considérée comme un modèle en matière de mobilité durable.""")
 
-st.markdown("**_Les visualisations utilisent les données du Challenge mobilité sur cinq années : 2020 (149 répondants), 2021 (735), 2022 (), 2023 (412), 2024 (424)_**")
+st.markdown("**_Les visualisations utilisent les données du Challenge mobilité sur cinq années : 2020 (149 répondants), 2021 (735), 2022 (247), 2023 (412), 2024 (424)_**")
 
 
 st.header("Quelles sont les modes de transport utilisés par les usagers de l'INP (étudiants et personnels) ? (en finition)")
@@ -108,13 +106,7 @@ st.pyplot(fig)
 
 st.header("Les matrices des choix de transport en fonction du type de distance (en cours)")
 
-st.header("Que nous révèles les données de l'UGA ? (en cours)")
-
-st.header("Comparaison avec Copenhague (en cours, dépend du temps restant)")
-
-
 
 st.header("Les raisons qui poussent aux choix des transports utilisés (en cours)")
 
 
-st.write("Ajoutez ici une étude temporelle détaillée sur l'INP. Vous pouvez inclure des graphiques ou des analyses basées sur les données temporelles.")
