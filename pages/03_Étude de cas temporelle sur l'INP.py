@@ -159,7 +159,7 @@ st.pyplot(fig)
 
 
 
-st.header("Les matrices des choix de transport en fonction du type de distance (en cours)")
+st.header("Les matrices des choix de transport en fonction du type de distance")
 
 
 df_2020 = pd.read_csv('BaseDeDonnées/INP2020Matrice.csv')
