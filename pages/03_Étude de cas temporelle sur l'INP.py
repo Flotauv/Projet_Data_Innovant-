@@ -155,6 +155,10 @@ st.header("Les matrices des choix de transport en fonction du type de distance (
 
 
 st.header("Les raisons qui poussent aux choix des transports utilisés (en cours)")
+
+
+
+
 df_choix = pd.read_excel("BaseDeDonnées/choix.xlsx")
 import numpy as np
 import matplotlib.pyplot as plt
