@@ -155,5 +155,42 @@ st.header("Les matrices des choix de transport en fonction du type de distance (
 
 
 st.header("Les raisons qui poussent aux choix des transports utilisés (en cours)")
+df_choix = pd.read_excel("BaseDeDonnées/choix.xlsx")
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from collections import Counter
 
+# Renommage de la colonne contenant les réponses
+col_name = "33. Pourquoi avez-vous choisi ce mode de transport pour vous rendre sur votre lieu de travail ?_(3 réponses maximum)"
+df_choix = df_choix.rename(columns={col_name: "Reasons"})
+
+# Extraction et comptage des raisons
+reasons_series = df_choix["Reasons"].dropna().str.split(';').explode()
+reasons_counts = Counter(reasons_series)
+
+# Conversion en DataFrame et triage par fréquence
+df_choix = pd.DataFrame(reasons_counts.items(), columns=['Reason', 'Count']).sort_values(by='Count', ascending=False)
+
+# Création de la figure
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Génération des couleurs et des hauteurs des barres
+colors = plt.cm.Paired(np.linspace(0, 1, len(df_choix)))
+bars = ax.barh(df_choix['Reason'], df_choix['Count'], color=colors)
+# Ajout des labels et du titre 
+ax.set_xlabel("Nombre de mentions")
+ax.set_ylabel("Raisons du choix du mode de transport")
+ax.set_title("Principales raisons du choix d'un mode de transport")
+
+# Ajout des valeurs sur les barres
+for bar in bars:
+    ax.text(bar.get_width() + 5, bar.get_y() + bar.get_height()/2, 
+            str(int(bar.get_width())), va='center')
+
+# Inversion de l'axe Y pour afficher la raison la plus populaire en haut
+plt.gca().invert_yaxis()
+
+# Affichage de la visualisation
+st.pyplot(fig)
 
