@@ -21,10 +21,10 @@ import numpy as np
 # Charger les données
 df_merged = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
 #df_occurence = pd.DataFrame()
-colonnes = df_merged.columns[df_merged.columns.str.startswith('Proportion Occurrences')]
-colonnes = colonnes.to_list()
-colonnes.append('Mode de Transport')
-df_occurence = df_merged[colonnes]
+colonnes_occ = df_merged.columns[df_merged.columns.str.startswith('Proportion Occurrences')]
+colonnes_occ = colonnes_occ.to_list()
+colonnes_occ.append('Mode de Transport')
+df_occurence = df_merged[colonnes_occ]
 df_occurence = df_occurence.melt(id_vars='Mode de Transport',value_name='Occurrence (%)',var_name='Annee')
 
 df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Trotinette ou vélo électrique','Trotinette ou vélo')
@@ -44,6 +44,28 @@ df_occurence['Annee'] = df_occurence['Annee'].str.replace('Proportion Occurrence
 st.dataframe(df_occurence)
 
 st.line_chart(data=df_occurence,x='Annee',y='Occurrence (%)',color='Mode de Transport',width=900,height=500)
+
+## Affichage distances parcourues 
+colonnes_dist = df_merged.columns[df_merged.columns.str.startswith('Proportion Distance')]
+colonnes_dist = colonnes_dist.to_list()
+colonnes_dist.append('Mode de Transport')
+df_dist = df_merged[colonnes_dist]
+df_dist = df_dist.melt(id_vars='Mode de Transport',value_name='Proportion Distance (%)',var_name='Annee')
+df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Trotinette ou vélo électrique','Trotinette ou vélo')
+df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Autre',np.nan)
+df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Moto / Scooter',np.nan)
+df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Voiture électrique',np.nan)
+df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Voiture hybride rechargeable',np.nan)
+df_dist = df_dist.dropna()
+df_dist = df_dist.groupby(['Mode de Transport','Annee'])['Proportion Distance (%)'].sum().reset_index()
+df_dist['Annee'] = df_dist['Annee'].str.replace('Proportion Distance Totale (%)','')
+st.dataframe(df_dist)
+st.line_chart(data=df_dist,x='Annee',y='Proportion Distance (%)',color='Mode de Transport',width=900,height=500)
+
+
+
+
+
 
 
 # Définition des années et des colonnes concernées
