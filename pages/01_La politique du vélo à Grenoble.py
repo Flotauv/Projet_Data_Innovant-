@@ -59,7 +59,7 @@ def fct_transform_tmja_to_axes_routier(file):
     df_axes_routier['tmja']=round(df_axes_routier['tmja'])
     df_axes_routier['annee']=df_axes_routier['annee'].astype(str)
     df_axes_routier = df_axes_routier[(df_axes_routier['Axe routier'] != 'N0007') & (df_axes_routier['Axe routier'] != 'A0007N')]
-    df_axes_routier = df_axes_routier.rename(columns={'tmja': 'Taux Moyen Journalier Annualisé (en milliers)'})
+    #df_axes_routier = df_axes_routier.rename(columns={'tmja': 'Taux Moyen Journalier Annualisé (en millier)'})
     
     return df_axes_routier
 
@@ -228,6 +228,8 @@ def fct_comptage_pietons_permanents(file):
     df = df.rename(columns={'localisation':'Localisation'})
 
     df = df.melt(id_vars='Localisation',value_name='valeur',var_name='tmj')
+    df['tmj'] = df['tmj'].str.replace('tmj_','')
+
     return df
 
 ### vélos permanents 
@@ -246,6 +248,7 @@ def fct_comptage_velos_permanents(file):
     df = df.groupby('localisation')[colonnes].mean().reset_index()
     df = df.rename(columns={'localisation':'Localisation'})
     df = df.melt(id_vars='Localisation',value_name='valeur',var_name='tmj')
+    df['tmj'] = df['tmj'].str.replace('tmj_','')
     return df
 
 
@@ -278,10 +281,10 @@ with col_traffic_principale:
     st.subheader('Évolution du traffic autour de Grenoble',divider=True)
     st.line_chart(data=fct_concat(),
                   x='annee',
-                  y='Taux Moyen Journalier Annualisé (en milliers)',
+                  y='tmja',
                   color='Axe routier',
-                  x_label='Axes routiers',
-                  y_label='Tmja (en milliers)',
+                  x_label='Années',
+                  y_label="Taux Moyen Journalier (en millier) ",
                   width=900,
                   height=500
                   )
@@ -293,7 +296,7 @@ with col_accident_principale:
                  x='Année',
                  y='Nombre accidents',
                  x_label='Années',
-                 y_label='Accidents',
+                 y_label="Nombre d'accidents",
                  width=900,
                  height=500)
 
@@ -318,7 +321,7 @@ with col_comptage_pietons_permanent_principale:
                   y='valeur',
                   color='Localisation',
                   x_label='Années',
-                  y_label='Taux moyen journalier (en milliers)',
+                  y_label='Taux moyen journalier (en millier)',
                   width=900,
                   height=500)
     
@@ -328,7 +331,7 @@ with col_comptage_vélos_permanent_principale:
                  x='tmj',
                  y='valeur',
                  x_label='Années',
-                 y_label='Taux moyen journalier (en milliers)',
+                 y_label='Taux moyen journalier (en millier)',
                  color='Localisation',
                  width=900,
                  height=500)
