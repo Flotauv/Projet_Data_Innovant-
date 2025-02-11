@@ -162,11 +162,11 @@ st.pyplot(fig)
 st.header("Les matrices des choix de transport en fonction du type de distance")
 
 
-df_2020 = pd.read_csv('BaseDeDonnées/INP2020Matrice.csv')
-df_2021 = pd.read_csv('BaseDeDonnées/INP2021Matrice.csv')
-df_2022 = pd.read_csv('BaseDeDonnées/INP2022Matrice.csv')
-df_2023 = pd.read_csv('BaseDeDonnées/INP2023Matrice.csv')
-df_2024 = pd.read_csv('BaseDeDonnées/INP2024Matrice.csv')
+df_2020 = pd.read_excel('BaseDeDonnées/INP2020Matrice.xlsx')
+df_2021 = pd.read_excel('BaseDeDonnées/INP2021Matrice.xlsx')
+df_2022 = pd.read_excel('BaseDeDonnées/INP2022Matrice.xlsx')
+df_2023 = pd.read_excel('BaseDeDonnées/INP2023Matrice.xlsx')
+df_2024 = pd.read_excel('BaseDeDonnées/INP2024Matrice.xlsx')
 
 import seaborn as sns
 import matplotlib.pyplot as plt
