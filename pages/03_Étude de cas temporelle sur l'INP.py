@@ -157,7 +157,60 @@ ax.legend()
 # Afficher le graphique dans Streamlit
 st.pyplot(fig)
 
+
+
 st.header("Les matrices des choix de transport en fonction du type de distance (en cours)")
+
+
+df_2020 = pd.read_csv('BaseDeDonnées/INP2020Matrice.csv')
+df_2021 = pd.read_csv('BaseDeDonnées/INP2021Matrice.csv')
+df_2022 = pd.read_csv('BaseDeDonnées/INP2022Matrice.csv')
+df_2023 = pd.read_csv('BaseDeDonnées/INP2023Matrice.csv')
+df_2024 = pd.read_csv('BaseDeDonnées/INP2024Matrice.csv')
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Dictionnaire des DataFrames par année
+data = {
+    '2020': df_2020,
+    '2021': df_2021,
+    '2022': df_2022,
+    '2023': df_2023,
+    '2024': df_2024
+}
+
+# Titre de l'application
+st.title("Visualisation des occurrences des modes de transport par type de trajet")
+
+# Sélecteur d'année
+selected_year = st.selectbox("Sélectionnez une année", list(data.keys()))
+
+# Récupérer le DataFrame correspondant à l'année sélectionnée
+dfanalyse = data[selected_year]
+
+# Traitement des données
+colonnes_gardees = dfanalyse.drop(columns=['Distance totale du trajet', 'Type de trajet'])
+occurrences_transport = dfanalyse.groupby('Type de trajet').apply(lambda group: (group[colonnes_gardees.columns] > 0).sum())
+
+# Création de la heatmap
+fig, ax = plt.subplots(figsize=(12, 8))
+sns.heatmap(occurrences_transport, annot=True, fmt="d", cmap="YlGnBu", cbar=True, ax=ax)
+ax.set_title(f"Occurrences des modes de transport par type de trajet en {selected_year}", fontsize=16)
+ax.set_ylabel("Type de trajet", fontsize=12)
+ax.set_xlabel("Modes de transport", fontsize=12)
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+
+# Affichage de la heatmap dans Streamlit
+st.pyplot(fig)
+
+
+
+
+
+
+
 
 
 st.header("Les raisons qui poussent aux choix des transports utilisés")
