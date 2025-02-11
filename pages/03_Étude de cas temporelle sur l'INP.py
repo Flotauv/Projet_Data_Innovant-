@@ -202,6 +202,7 @@ ax.set_xlabel("Modes de transport", fontsize=12)
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
 
+
 # Affichage de la heatmap dans Streamlit
 st.pyplot(fig)
 
