@@ -40,10 +40,9 @@ df_occurence = df_occurence.dropna()
 df_occurence = df_occurence.groupby(['Mode de Transport','Annee'])['Occurrence (%)'].sum().reset_index()
 
 df_occurence['Annee'] = df_occurence['Annee'].str.replace('Proportion Occurrences (%)','')
-#st.dataframe(df_occurence)
-st.dataframe(df_occurence)
 
-st.line_chart(data=df_occurence,x='Annee',y='Occurrence (%)',color='Mode de Transport',width=900,height=500)
+
+
 
 ## Affichage distances parcourues 
 colonnes_dist = df_merged.columns[df_merged.columns.str.startswith('Proportion Distance')]
@@ -59,7 +58,14 @@ df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Voiture hyb
 df_dist = df_dist.dropna()
 df_dist = df_dist.groupby(['Mode de Transport','Annee'])['Proportion Distance (%)'].sum().reset_index()
 df_dist['Annee'] = df_dist['Annee'].str.replace('Proportion Distance Totale (%)','')
-st.dataframe(df_dist)
+
+
+
+### Graphiques 
+st.subheader("Pourcentage des modes de déplacement par années ",divider=True)
+st.line_chart(data=df_occurence,x='Annee',y='Occurrence (%)',color='Mode de Transport',width=900,height=500)
+
+st.subheader("Distance totale par mode de transport (2020 - 2024)",divider=True)
 st.line_chart(data=df_dist,x='Annee',y='Proportion Distance (%)',color='Mode de Transport',width=900,height=500)
 
 
