@@ -31,7 +31,7 @@ year_columns = [f"Proportion Occurrences (%) {year}" for year in years]
 year_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]  # Bleu, Orange, Vert, Rouge
 
 # Interface utilisateur Streamlit
-st.title("📊 Histogramme des Modes de Transport (2020 - 2024)")
+st.subheader("📊 Histogramme des Modes de Transport (2020 - 2024)",divider=True)
 st.write("Affichage des proportions d'occurrences (%) des modes de transport sur 4 années.")
 
 # Création du graphique avec de nouvelles couleurs
