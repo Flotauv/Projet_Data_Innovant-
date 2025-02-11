@@ -154,7 +154,7 @@ st.pyplot(fig)
 st.header("Les matrices des choix de transport en fonction du type de distance (en cours)")
 
 
-st.header("Les raisons qui poussent aux choix des transports utilisés (en cours)")
+st.header("Les raisons qui poussent aux choix des transports utilisés")
 
 
 
