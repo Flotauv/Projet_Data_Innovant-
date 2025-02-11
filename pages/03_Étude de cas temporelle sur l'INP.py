@@ -1,14 +1,14 @@
 import streamlit as st 
 
+
+### Configuration de la page 
+st.set_page_config(page_title = "Étude de cas temporelle sur l'INP et l'UGA",layout="wide")
 # Titres 
 st.title("Etude de cas temporelle sur l'INP et l'UGA")
-st.write(
-    """
-Cette page présente une analyse des données de l'INP, groupe d'écoles de l'Université Grenoble Alpes. Les visualisations s'appuient sur une enquête intitulée "Challenge mobilité".
-Cette enquête compare le trajet quotidien d'un usager de l'INP, réalisé tout au long de l'année, en termes de modes de transport utilisés et de kilomètres parcourus sur chaque mode,
-avec le trajet effectué lors d'une journée dédiée au challenge, où l'usager doit tenter d'utiliser des modes de transport écologiques.
-    """
-)
+st.write("Cette page présente une analyse des données de l'INP, groupe d'écoles de l'Université Grenoble Alpes.")
+    
+st.write("Les visualisations s'appuient sur une enquête intitulée 'Challenge mobilité' ")
+st.write("Cette enquête compare les trajets de personnes faisant partie de  l'INP se rendant sur leur lieu de travail/étude via différents modes de transport")
 st.write("""Nous compléterons nos visualisations avec celles issues de l'ensemble de l'Université Grenoble Alpes (plus de 57 000 étudiants),
 ainsi que celles provenant de Copenhague, cette dernière étant considérée comme un modèle en matière de mobilité durable.""")
 
