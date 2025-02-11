@@ -21,42 +21,45 @@ repertory_traffic = 'BaseDeDonnées/Traffic_routier/'
 @st.cache_data()
 def fct_transform_tmja_to_axes_routier(file):
 
-    df_tmja = pd.read_csv(file, sep=None,engine='python')  
+    df = pd.read_csv(file, sep=None,engine='python')  
     ##Conversion en date pour extraire l'année
-    df_tmja.columns = df_tmja.columns.str.lower()
-    df_tmja.columns = df_tmja.columns.str.replace(r'_','',regex=True)
-    df_tmja['datereferentiel'] = pd.to_datetime(df_tmja['datereferentiel'])
-    df_tmja['annee'] = df_tmja['datereferentiel'].dt.year
+    df.columns = df.columns.str.lower()
+    df.columns = df.columns.str.replace(r'_','',regex=True)
+    df['datereferentiel'] = pd.to_datetime(df['datereferentiel'])
+    df['annee'] = df['datereferentiel'].dt.year
     
     ##Filtre sur les routes du département de l'Isère
-    df_tmja = df_tmja[df_tmja['depprd'] == 38]
-    df_tmja = df_tmja.dropna()  # Il y en a très peu
+    df = df[df['depprd'] == 38]
+    df = df.dropna()  # Il y en a très peu
     
-    df_tmja['longueur'] = df_tmja['longueur'].str.replace(',', '.')
-    df_tmja['ratiopl'] = df_tmja['ratiopl'].str.replace(',', '.')
-    df_tmja['ratiopl'] = df_tmja['ratiopl'].astype(float)
+    df['longueur'] = df['longueur'].str.replace(',', '.')
+    df['ratiopl'] = df['ratiopl'].str.replace(',', '.')
+    df['ratiopl'] = df['ratiopl'].astype(float)
     
-    df_tmja['ratiopl'] = df_tmja['ratiopl']/100
-    df_tmja['nb_poids_lourds'] = round(df_tmja['tmja'] * df_tmja['ratiopl'])
+    df['ratiopl'] = df['ratiopl']/100
+    df['nb_poids_lourds'] = round(df['tmja'] * df['ratiopl'])
+    
+    ##axe routier
+    df = df.rename(columns={'route': 'Axe routier'})
+    df['Axe routier'] = df['Axe routier'].replace('A0041', 'A41')
+    df['Axe routier'] = df['Axe routier'].replace('A0048', 'A48')
+    df['Axe routier'] = df['Axe routier'].replace('A00480', 'A48')
+    df['Axe routier'] = df['Axe routier'].replace('N0087', 'Nationale 87')
+    df['Axe routier'] = df['Axe routier'].replace('A0051N', 'A51')
+    df['Axe routier'] = df['Axe routier'].replace('A0051', 'A51')
+
+    
+    liste_axes_ref=['A41','A48','A51','A480','Nationale 87']
+    
+    df = df[df['Axe routier'].isin(liste_axes_ref)]
     ## Création de la base de donnée avec les routes 
-    df_axes_routier = df_tmja.groupby(['route', 'annee'])[[ 'tmja', 'nb_poids_lourds']].mean().reset_index().sort_values(by='tmja', ascending=False)
+    df_axes_routier = df.groupby(['Axe routier', 'annee'])[[ 'tmja', 'nb_poids_lourds']].mean().reset_index().sort_values(by='tmja', ascending=False)
     
     df_axes_routier['ratiopl'] = round((df_axes_routier['nb_poids_lourds']/df_axes_routier['tmja'])*100)
     df_axes_routier['tmja']=round(df_axes_routier['tmja'])
     df_axes_routier['annee']=df_axes_routier['annee'].astype(str)
-    df_axes_routier = df_axes_routier[(df_axes_routier['route'] != 'N0007') & (df_axes_routier['route'] != 'A0007N')]
-    df_axes_routier = df_axes_routier.rename(columns={'tmja': 'Taux Moyen Journalier Annualisé (en Millions)'})
-    
-    df_axes_routier = df_axes_routier.rename(columns={'route': 'Axe routier'})
-
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('A0041', 'A41')
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('A0043', 'A43')
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('A0007', 'A7')
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('A0048', 'A48')
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('A0049', 'A49')
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('N0085', 'Nationale 85')
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('N0087', 'Nationale 87')
-    df_axes_routier['Axe routier'] = df_axes_routier['Axe routier'].replace('A0051N', 'A51')
+    df_axes_routier = df_axes_routier[(df_axes_routier['Axe routier'] != 'N0007') & (df_axes_routier['Axe routier'] != 'A0007N')]
+    #df_axes_routier = df_axes_routier.rename(columns={'tmja': 'Taux Moyen Journalier Annualisé (en millier)'})
     
     return df_axes_routier
 
@@ -225,6 +228,8 @@ def fct_comptage_pietons_permanents(file):
     df = df.rename(columns={'localisation':'Localisation'})
 
     df = df.melt(id_vars='Localisation',value_name='valeur',var_name='tmj')
+    df['tmj'] = df['tmj'].str.replace('tmj_','')
+
     return df
 
 ### vélos permanents 
@@ -243,6 +248,7 @@ def fct_comptage_velos_permanents(file):
     df = df.groupby('localisation')[colonnes].mean().reset_index()
     df = df.rename(columns={'localisation':'Localisation'})
     df = df.melt(id_vars='Localisation',value_name='valeur',var_name='tmj')
+    df['tmj'] = df['tmj'].str.replace('tmj_','')
     return df
 
 
@@ -273,12 +279,12 @@ with col_image_principale:
     
 with col_traffic_principale:
     st.subheader('Évolution du traffic autour de Grenoble',divider=True)
-    st.bar_chart(data=fct_concat(),
-                  x='Axe routier',
-                  y='Taux Moyen Journalier Annualisé (en Millions)',
-                  color='annee',
-                  x_label='Axes routiers',
-                  y_label='Tmja (en milliers)',
+    st.line_chart(data=fct_concat(),
+                  x='annee',
+                  y='tmja',
+                  color='Axe routier',
+                  x_label='Années',
+                  y_label="Taux Moyen Journalier (en millier) ",
                   width=900,
                   height=500
                   )
@@ -290,7 +296,7 @@ with col_accident_principale:
                  x='Année',
                  y='Nombre accidents',
                  x_label='Années',
-                 y_label='Accidents',
+                 y_label="Nombre d'accidents",
                  width=900,
                  height=500)
 
@@ -315,7 +321,7 @@ with col_comptage_pietons_permanent_principale:
                   y='valeur',
                   color='Localisation',
                   x_label='Années',
-                  y_label='Taux moyen journalier (en milliers)',
+                  y_label='Taux moyen journalier (en millier)',
                   width=900,
                   height=500)
     
@@ -325,7 +331,7 @@ with col_comptage_vélos_permanent_principale:
                  x='tmj',
                  y='valeur',
                  x_label='Années',
-                 y_label='Taux moyen journalier (en milliers)',
+                 y_label='Taux moyen journalier (en millier)',
                  color='Localisation',
                  width=900,
                  height=500)
