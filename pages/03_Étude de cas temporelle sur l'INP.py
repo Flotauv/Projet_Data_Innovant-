@@ -20,6 +20,31 @@ import numpy as np
 
 # Charger les données
 df_merged = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
+#df_occurence = pd.DataFrame()
+colonnes = df_merged.columns[df_merged.columns.str.startswith('Proportion Occurrences')]
+colonnes = colonnes.to_list()
+colonnes.append('Mode de Transport')
+df_occurence = df_merged[colonnes]
+df_occurence = df_occurence.melt(id_vars='Mode de Transport',value_name='Occurrence (%)',var_name='Annee')
+
+df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Trotinette ou vélo électrique','Trotinette ou vélo')
+
+df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Autre',np.nan)
+df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Moto / Scooter',np.nan)
+df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Voiture électrique',np.nan)
+df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Voiture hybride rechargeable',np.nan)
+
+
+
+df_occurence = df_occurence.dropna()
+df_occurence = df_occurence.groupby(['Mode de Transport','Annee'])['Occurrence (%)'].sum().reset_index()
+
+df_occurence['Annee'] = df_occurence['Annee'].str.replace('Proportion Occurrences (%)','')
+#st.dataframe(df_occurence)
+st.dataframe(df_occurence)
+
+st.line_chart(data=df_occurence,x='Annee',y='Occurrence (%)',color='Mode de Transport',width=900,height=500)
+
 
 # Définition des années et des colonnes concernées
 years = ["2020", "2021", "2023", "2024"]
