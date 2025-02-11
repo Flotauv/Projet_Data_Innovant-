@@ -106,13 +106,7 @@ st.pyplot(fig)
 
 st.header("Les matrices des choix de transport en fonction du type de distance (en cours)")
 
-st.header("Que nous révèles les données de l'UGA ? (en cours)")
-
-st.header("Comparaison avec Copenhague (en cours, dépend du temps restant)")
-
-
 
 st.header("Les raisons qui poussent aux choix des transports utilisés (en cours)")
 
 
-st.write("Ajoutez ici une étude temporelle détaillée sur l'INP. Vous pouvez inclure des graphiques ou des analyses basées sur les données temporelles.")
