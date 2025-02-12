@@ -27,6 +27,7 @@ df_merged = pd.read_excel('BaseDeDonnées/df_merged.xlsx')
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import pandas as pd
 
 # Définition des années et des colonnes concernées
 years = ["2020", "2021", "2022", "2023", "2024"]
