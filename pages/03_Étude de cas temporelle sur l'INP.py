@@ -112,8 +112,30 @@ ax.legend()
 # Afficher le graphique dans Streamlit
 st.pyplot(fig)
 
-st.header("Quel impact a le challenge mobilité sur les déplacements ? (en cours)")
 
+
+
+st.header("Quel impact a le challenge mobilité sur les déplacements ?")
+
+
+
+# Chargement des données
+df_impact_challenge = pd.read_excel('BaseDeDonnées/ImpactChallenge.xlsx')
+
+# Création du graphique avec Matplotlib
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(df_impact_challenge.columns, df_impact_challenge.iloc[0], marker='o', linestyle='-', color='b')
+
+# Ajout des labels et du titre
+ax.set_xlabel("Année")
+ax.set_ylabel("Évolution en %")
+ax.set_title("Impact du Challenge Mobilité sur les choix de modes de transport verts")
+
+# Affichage de la grille
+ax.grid(True)
+
+# Affichage du graphique dans Streamlit
+st.pyplot(fig)
 
 
 st.header("La distance parcourue influence-t-elle le choix du mode de transport ? Que représente chaque moyen de transport dans le kilométrage total ? (en finition)")
