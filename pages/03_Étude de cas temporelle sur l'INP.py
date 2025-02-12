@@ -62,66 +62,28 @@ df_dist['Annee'] = df_dist['Annee'].str.replace('Proportion Distance Totale (%)'
 
 ### Graphiques 
 st.subheader("Part représentative des modes de déplacement par années ",divider=True)
-st.line_chart(data=df_occurence,
+st.bar_chart(data=df_occurence,
               x='Annee',
               y='Occurrence (%)',
               color='Mode de Transport',
               x_label='Années',
               y_label='Part représentative (%)',
               width=900,
+              stack=False,
               height=500)
 
 st.subheader("Distance totale par mode de transport (2020 - 2024)",divider=True)
-st.line_chart(data=df_dist,
+st.bar_chart(data=df_dist,
               x='Annee',
               y='Proportion Distance (%)',
               color='Mode de Transport',
               x_label='Années',
               y_label='Part Transport Distance Totale (%)',
+              stack=False,
               width=900,height=500)
 
 
 
-
-
-
-"""
-# Définition des années et des colonnes concernées
-years = ["2020", "2021", "2022", "2023", "2024"]
-year_columns = [f"Distance Moyenne (km) {year}" for year in years]
-
-# Génération d'une palette de vert dégradé
-cmap = cm.Greens  # Colormap vert
-year_colors = [cmap(0.2 + i * 0.15) for i in range(len(years))]  # Nuances progressives
-
-# Création du graphique avec nuances de vert
-fig, ax = plt.subplots(figsize=(14, 7))
-
-# Position des barres avec espacement plus large entre les groupes
-bar_width = 0.15
-spacing = 0.3  # Espace entre les groupes de barres
-x = np.arange(len(df_merged)) * (bar_width * len(years) + spacing)  # Ajustement des positions
-
-# Boucle sur les années pour tracer les histogrammes avec nuances de vert
-for i, (year, color) in enumerate(zip(years, year_colors)):
-    ax.bar(
-        x + i * bar_width,
-        df_merged[year_columns[i]],
-        width=bar_width,
-        label=f"Année {year}",
-        color=color  # Utilisation des nuances de vert
-    )
-
-# Configuration des axes et légendes
-ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
-ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
-ax.set_ylabel("Distance Moyenne (km)")
-ax.set_title("Distance Moyenne par Mode de Transport (2020 - 2024)")
-ax.legend()
-
-# Affichage de la visualisation
-st.pyplot(fig)
-""" 
 
 
 
@@ -135,24 +97,13 @@ st.header("Quel impact a le challenge mobilité sur les déplacements ?")
 df_impact_challenge = pd.read_excel('BaseDeDonnées/ImpactChallenge.xlsx')
 
 # Création de deux colonnes
-col1, col2 = st.columns([1, 2])  # 1/3 pour le texte, 2/3 pour le graphique
+col1, col2 = st.columns([1.5, 1])  # 1/3 pour le texte, 2/3 pour le graphique
 
-# Partie gauche : texte explicatif
-with col1:
-    st.markdown("## Impact du Challenge Mobilité")
-    st.write(
-        "Ce graphique illustre l'évolution des choix de modes de transport verts "
-        "dans le cadre du Challenge Mobilité. L'objectif est de mesurer l'impact "
-        "de cette initiative sur les comportements de déplacement au fil des années."
-    )
-    st.write("L'impact du Challenge Mobilité semble être mitigé. On n'observe pas d'adoption massive des transports verts durant le challenge.")
-
-st.markdown("**Cela indique sûrement que les campagnes de sensibilisation s'adressent souvent à un public déjà conquis.**")
 
 
 
 # Partie droite : affichage du graphique
-with col2:
+with col1:
     # Création du graphique avec Matplotlib
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(df_impact_challenge.columns, df_impact_challenge.iloc[0], marker='o', linestyle='-', color='b')
@@ -167,6 +118,18 @@ with col2:
 
     # Affichage du graphique dans Streamlit
     st.pyplot(fig)
+
+# Partie gauche : texte explicatif
+with col2:
+    st.markdown("## Impact du Challenge Mobilité")
+    st.write(
+        "Ce graphique illustre l'évolution des choix de modes de transport verts "
+        "dans le cadre du Challenge Mobilité. L'objectif est de mesurer l'impact "
+        "de cette initiative sur les comportements de déplacement au fil des années."
+    )
+    st.write("L'impact du Challenge Mobilité semble être mitigé. On n'observe pas d'adoption massive des transports verts durant le challenge.")
+
+st.markdown("**Cela indique sûrement que les campagnes de sensibilisation s'adressent souvent à un public déjà conquis.**")
 
 
 
