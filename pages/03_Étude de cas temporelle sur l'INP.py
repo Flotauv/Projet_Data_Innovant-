@@ -3,11 +3,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-
+from collections import Counter
 ### Configuration de la page 
 st.set_page_config(page_title = "Étude de cas temporelle sur l'INP",layout="wide")
 # Titres 
-st.title("Etude de cas temporelle sur l'INP")
+st.title("Étude de cas temporelle sur l'INP")
 st.write("Cette page présente une analyse des données de l'INP, groupe d'écoles de l'Université Grenoble Alpes.")
     
 st.write("Les visualisations s'appuient sur une enquête intitulée **_'Challenge mobilité'_**  sur cinq années 2020 (149 répondants), 2021 (735), 2022 (247), 2023 (412), 2024 (424)")
@@ -273,10 +273,8 @@ st.header("Les raisons qui poussent aux choix des transports utilisés")
 
 
 df_choix = pd.read_excel("BaseDeDonnées/choix.xlsx")
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from collections import Counter
+
+
 
 # Renommage de la colonne contenant les réponses
 col_name = "33. Pourquoi avez-vous choisi ce mode de transport pour vous rendre sur votre lieu de travail ?_(3 réponses maximum)"
