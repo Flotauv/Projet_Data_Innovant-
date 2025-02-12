@@ -87,41 +87,39 @@ st.line_chart(data=df_dist,
 
 """
 # Définition des années et des colonnes concernées
-years = ["2020", "2021", "2023", "2024"]
-year_columns = [f"Proportion Occurrences (%) {year}" for year in years]
+years = ["2020", "2021", "2022", "2023", "2024"]
+year_columns = [f"Distance Moyenne (km) {year}" for year in years]
 
-# Définir des couleurs bien distinctes pour chaque année
-year_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]  # Bleu, Orange, Vert, Rouge
+# Génération d'une palette de vert dégradé
+cmap = cm.Greens  # Colormap vert
+year_colors = [cmap(0.2 + i * 0.15) for i in range(len(years))]  # Nuances progressives
 
-# Interface utilisateur Streamlit
-st.subheader("📊 Histogramme des Modes de Transport (2020 - 2024)",divider=True)
-st.write("Affichage des proportions d'occurrences (%) des modes de transport sur 4 années.")
-
-# Création du graphique avec de nouvelles couleurs
+# Création du graphique avec nuances de vert
 fig, ax = plt.subplots(figsize=(14, 7))
 
-# Position des barres
-bar_width = 0.2
-x = np.arange(len(df_merged))  # Indices des modes de transport
+# Position des barres avec espacement plus large entre les groupes
+bar_width = 0.15
+spacing = 0.3  # Espace entre les groupes de barres
+x = np.arange(len(df_merged)) * (bar_width * len(years) + spacing)  # Ajustement des positions
 
-# Boucle sur les années pour tracer les histogrammes avec des couleurs bien distinctes
+# Boucle sur les années pour tracer les histogrammes avec nuances de vert
 for i, (year, color) in enumerate(zip(years, year_colors)):
     ax.bar(
         x + i * bar_width,
         df_merged[year_columns[i]],
         width=bar_width,
         label=f"Année {year}",
-        color=color  # Utilisation des nouvelles couleurs distinctes
+        color=color  # Utilisation des nuances de vert
     )
 
 # Configuration des axes et légendes
 ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
 ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
-ax.set_ylabel("Proportion Occurrences (%)")
-ax.set_title("Proportion d'Occurrences par Mode de Transport (2020 - 2024)")
+ax.set_ylabel("Distance Moyenne (km)")
+ax.set_title("Distance Moyenne par Mode de Transport (2020 - 2024)")
 ax.legend()
 
-# Afficher le graphique dans Streamlit
+# Affichage de la visualisation
 st.pyplot(fig)
 """ 
 
