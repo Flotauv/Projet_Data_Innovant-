@@ -1,5 +1,8 @@
 import streamlit as st 
-
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 ### Configuration de la page 
 st.set_page_config(page_title = "Étude de cas temporelle sur l'INP",layout="wide")
@@ -7,16 +10,13 @@ st.set_page_config(page_title = "Étude de cas temporelle sur l'INP",layout="wid
 st.title("Etude de cas temporelle sur l'INP")
 st.write("Cette page présente une analyse des données de l'INP, groupe d'écoles de l'Université Grenoble Alpes.")
     
-st.write("Les visualisations s'appuient sur une enquête intitulée 'Challenge mobilité' ")
+st.write("Les visualisations s'appuient sur une enquête intitulée **_'Challenge mobilité'_**  sur cinq années 2020 (149 répondants), 2021 (735), 2022 (247), 2023 (412), 2024 (424)")
 st.write("Cette enquête compare les trajets de personnes faisant partie de  l'INP se rendant sur leur lieu de travail/étude via différents modes de transport")
 
-st.markdown("**_Les visualisations utilisent les données du Challenge mobilité sur cinq années : 2020 (149 répondants), 2021 (735), 2022 (247), 2023 (412), 2024 (424)_**")
 
 
-st.header("Quelles sont les modes de transport utilisés par les usagers de l'INP (étudiants et personnels) ? (en finition)")
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+st.header("Modes de transport")
+
 
 # Charger les données
 df_merged = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
@@ -26,14 +26,13 @@ colonnes_occ = colonnes_occ.to_list()
 colonnes_occ.append('Mode de Transport')
 df_occurence = df_merged[colonnes_occ]
 df_occurence = df_occurence.melt(id_vars='Mode de Transport',value_name='Occurrence (%)',var_name='Annee')
-
+df_occurence['Occurrence (%)'] = round(df_occurence['Occurrence (%)'])
 df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Trotinette ou vélo électrique','Trotinette ou vélo')
 
 df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Autre',np.nan)
 df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Moto / Scooter',np.nan)
 df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Voiture électrique',np.nan)
 df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Voiture hybride rechargeable',np.nan)
-
 
 
 df_occurence = df_occurence.dropna()
@@ -62,18 +61,31 @@ df_dist['Annee'] = df_dist['Annee'].str.replace('Proportion Distance Totale (%)'
 
 
 ### Graphiques 
-st.subheader("Pourcentage des modes de déplacement par années ",divider=True)
-st.line_chart(data=df_occurence,x='Annee',y='Occurrence (%)',color='Mode de Transport',width=900,height=500)
+st.subheader("Part représentative des modes de déplacement par années ",divider=True)
+st.line_chart(data=df_occurence,
+              x='Annee',
+              y='Occurrence (%)',
+              color='Mode de Transport',
+              x_label='Années',
+              y_label='Part représentative (%)',
+              width=900,
+              height=500)
 
 st.subheader("Distance totale par mode de transport (2020 - 2024)",divider=True)
-st.line_chart(data=df_dist,x='Annee',y='Proportion Distance (%)',color='Mode de Transport',width=900,height=500)
+st.line_chart(data=df_dist,
+              x='Annee',
+              y='Proportion Distance (%)',
+              color='Mode de Transport',
+              x_label='Années',
+              y_label='Part Transport Distance Totale (%)',
+              width=900,height=500)
 
 
 
 
 
 
-
+"""
 # Définition des années et des colonnes concernées
 years = ["2020", "2021", "2023", "2024"]
 year_columns = [f"Proportion Occurrences (%) {year}" for year in years]
@@ -111,7 +123,7 @@ ax.legend()
 
 # Afficher le graphique dans Streamlit
 st.pyplot(fig)
-
+""" 
 
 
 
@@ -212,8 +224,7 @@ df_2022 = pd.read_excel('BaseDeDonnées/INP2022Matrice.xlsx')
 df_2023 = pd.read_excel('BaseDeDonnées/INP2023Matrice.xlsx')
 df_2024 = pd.read_excel('BaseDeDonnées/INP2024Matrice.xlsx')
 
-import seaborn as sns
-import matplotlib.pyplot as plt
+
 
 # Dictionnaire des DataFrames par année
 data = {

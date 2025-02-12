@@ -97,7 +97,7 @@ def load_station_metro_velo():
     df = pd.read_csv("BaseDeDonnées/Stations_MetroVelo/velo_0.csv")
     df['latitude'] = [element[0] for element in df['geo_point_2d'].str.split(',')]
     df['longitude'] = [element[1] for element in df['geo_point_2d'].str.split(',')]
-    df['rayon'] = [0.05 for element in df['longitude']]
+    df['rayon'] = [0.5 for element in df['longitude']]
     return df 
 
 # Charger les données
@@ -187,10 +187,11 @@ with col_map:
         for _, row in stations_metro_velos.iterrows():
             folium.CircleMarker(
                 location =[row['latitude'],row['longitude']],
-                rayon=row['rayon'],
+                rayon=0.05,
                 fill=True,
                 color='yellow',
-                fill_color='gray',
+                fill_color='yellow',
+                fill_opacity=0.6,
                 tooltip=f"Localisation :{row['adresse']}").add_to(m)
 
     # Afficher la carte
@@ -205,7 +206,8 @@ legend_elements = [
     Line2D([0], [0], color='blue', lw=2, linestyle='-', label='Pistes cyclables'),
     Line2D([0], [0], color='red', marker='o', markersize=10, linestyle='', label='Nombre de trajets moyen journalier'),
     Line2D([0], [0], color='gray', marker='o', markersize=10, linestyle='', label='Arceaux vélo'),
-    Line2D([0], [0], color='green', lw=2, linestyle='--', label='Contours des communes')
+    Line2D([0], [0], color='green', lw=2, linestyle='--', label='Contours des communes'),
+    Line2D([0],[0], color='yellow',marker='o',markersize=10,linestyle='',label='Stations MetroVélo')
 ]
 # Ajout de la légende
 ax.legend(
