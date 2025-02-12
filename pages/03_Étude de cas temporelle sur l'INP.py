@@ -13,104 +13,142 @@ st.write("Cette enquête compare les trajets de personnes faisant partie de  l'I
 st.markdown("**_Les visualisations utilisent les données du Challenge mobilité sur cinq années : 2020 (149 répondants), 2021 (735), 2022 (247), 2023 (412), 2024 (424)_**")
 
 
-st.header("Quelles sont les modes de transport utilisés par les usagers de l'INP (étudiants et personnels) ? (en finition)")
-import pandas as pd
-import matplotlib.pyplot as plt
+
+
+st.header("Comment les modes de transport sont utilisés par les usagers de l'INP (étudiants et personnels) ?")
+
+
+
+
+
+df_merged = pd.read_excel('BaseDeDonnées/df_merged.xlsx')
+###Quelles sont les modes de transport les plus utilisés
+
 import numpy as np
-
-# Charger les données
-df_merged = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
-#df_occurence = pd.DataFrame()
-colonnes_occ = df_merged.columns[df_merged.columns.str.startswith('Proportion Occurrences')]
-colonnes_occ = colonnes_occ.to_list()
-colonnes_occ.append('Mode de Transport')
-df_occurence = df_merged[colonnes_occ]
-df_occurence = df_occurence.melt(id_vars='Mode de Transport',value_name='Occurrence (%)',var_name='Annee')
-
-df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Trotinette ou vélo électrique','Trotinette ou vélo')
-
-df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Autre',np.nan)
-df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Moto / Scooter',np.nan)
-df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Voiture électrique',np.nan)
-df_occurence['Mode de Transport'] = df_occurence['Mode de Transport'].replace('Voiture hybride rechargeable',np.nan)
-
-
-
-df_occurence = df_occurence.dropna()
-df_occurence = df_occurence.groupby(['Mode de Transport','Annee'])['Occurrence (%)'].sum().reset_index()
-
-df_occurence['Annee'] = df_occurence['Annee'].str.replace('Proportion Occurrences (%)','')
-
-
-
-
-## Affichage distances parcourues 
-colonnes_dist = df_merged.columns[df_merged.columns.str.startswith('Proportion Distance')]
-colonnes_dist = colonnes_dist.to_list()
-colonnes_dist.append('Mode de Transport')
-df_dist = df_merged[colonnes_dist]
-df_dist = df_dist.melt(id_vars='Mode de Transport',value_name='Proportion Distance (%)',var_name='Annee')
-df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Trotinette ou vélo électrique','Trotinette ou vélo')
-df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Autre',np.nan)
-df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Moto / Scooter',np.nan)
-df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Voiture électrique',np.nan)
-df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Voiture hybride rechargeable',np.nan)
-df_dist = df_dist.dropna()
-df_dist = df_dist.groupby(['Mode de Transport','Annee'])['Proportion Distance (%)'].sum().reset_index()
-df_dist['Annee'] = df_dist['Annee'].str.replace('Proportion Distance Totale (%)','')
-
-
-
-### Graphiques 
-st.subheader("Pourcentage des modes de déplacement par années ",divider=True)
-st.line_chart(data=df_occurence,x='Annee',y='Occurrence (%)',color='Mode de Transport',width=900,height=500)
-
-st.subheader("Distance totale par mode de transport (2020 - 2024)",divider=True)
-st.line_chart(data=df_dist,x='Annee',y='Proportion Distance (%)',color='Mode de Transport',width=900,height=500)
-
-
-
-
-
-
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 # Définition des années et des colonnes concernées
-years = ["2020", "2021", "2023", "2024"]
+years = ["2020", "2021", "2022", "2023", "2024"]
 year_columns = [f"Proportion Occurrences (%) {year}" for year in years]
 
-# Définir des couleurs bien distinctes pour chaque année
-year_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]  # Bleu, Orange, Vert, Rouge
+# Génération d'une palette de bleu dégradé
+cmap = cm.Blues  # Colormap bleu
+year_colors = [cmap(0.2 + i * 0.15) for i in range(len(years))]  # Nuances progressives
 
-# Interface utilisateur Streamlit
-st.subheader("📊 Histogramme des Modes de Transport (2020 - 2024)",divider=True)
-st.write("Affichage des proportions d'occurrences (%) des modes de transport sur 4 années.")
-
-# Création du graphique avec de nouvelles couleurs
+# Création du graphique avec nuances de bleu
 fig, ax = plt.subplots(figsize=(14, 7))
 
-# Position des barres
-bar_width = 0.2
-x = np.arange(len(df_merged))  # Indices des modes de transport
+# Position des barres avec espacement plus large entre les groupes
+bar_width = 0.15
+spacing = 0.3  # Espace entre les groupes de barres
+x = np.arange(len(df_merged)) * (bar_width * len(years) + spacing)  # Ajustement des positions
 
-# Boucle sur les années pour tracer les histogrammes avec des couleurs bien distinctes
+# Boucle sur les années pour tracer les histogrammes avec nuances de bleu
 for i, (year, color) in enumerate(zip(years, year_colors)):
     ax.bar(
         x + i * bar_width,
         df_merged[year_columns[i]],
         width=bar_width,
         label=f"Année {year}",
-        color=color  # Utilisation des nouvelles couleurs distinctes
+        color=color  # Utilisation des nuances de bleu
     )
 
 # Configuration des axes et légendes
 ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
 ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
-ax.set_ylabel("Proportion Occurrences (%)")
-ax.set_title("Proportion d'Occurrences par Mode de Transport (2020 - 2024)")
+ax.set_ylabel("Proportion d'utilisation %")
+ax.set_title("Proportion d'utilisation par Mode de Transport (2020 - 2024)")
 ax.legend()
 
-# Afficher le graphique dans Streamlit
+# Affichage de la visualisation
 st.pyplot(fig)
+
+
+
+
+
+###Part de chaque mode de transport sur les trajets de la ville
+
+# Définition des années et des colonnes concernées
+years = ["2020", "2021", "2022", "2023", "2024"]
+year_columns = [f"Proportion Distance Totale (%) {year}" for year in years]
+
+# Génération d'une palette de rouge dégradé
+cmap = cm.Reds  # Colormap rouge
+year_colors = [cmap(0.2 + i * 0.15) for i in range(len(years))]  # Nuances progressives
+
+# Création du graphique avec nuances de rouge
+fig, ax = plt.subplots(figsize=(14, 7))
+
+# Position des barres avec espacement plus large entre les groupes
+bar_width = 0.15
+spacing = 0.3  # Espace entre les groupes de barres
+x = np.arange(len(df_merged)) * (bar_width * len(years) + spacing)  # Ajustement des positions
+
+# Boucle sur les années pour tracer les histogrammes avec nuances de rouge
+for i, (year, color) in enumerate(zip(years, year_colors)):
+    ax.bar(
+        x + i * bar_width,
+        df_merged[year_columns[i]],
+        width=bar_width,
+        label=f"Année {year}",
+        color=color  # Utilisation des nuances de rouge
+    )
+# Configuration des axes et légendes
+ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
+ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
+ax.set_ylabel("Part des modes de transport dans les distances cumulées")
+ax.set_title("Importance de chaque mode de transport dans les distances réalisées (2020 - 2024)")
+ax.legend()
+
+# Affichage de la visualisation
+st.pyplot(fig)
+
+
+
+
+
+
+###Distance moyenne parcourue sur chaque mode de transport
+
+# Définition des années et des colonnes concernées
+years = ["2020", "2021", "2022", "2023", "2024"]
+year_columns = [f"Distance Moyenne (km) {year}" for year in years]
+
+# Génération d'une palette de vert dégradé
+cmap = cm.Greens  # Colormap vert
+year_colors = [cmap(0.2 + i * 0.15) for i in range(len(years))]  # Nuances progressives
+
+# Création du graphique avec nuances de vert
+fig, ax = plt.subplots(figsize=(14, 7))
+
+# Position des barres avec espacement plus large entre les groupes
+bar_width = 0.15
+spacing = 0.3  # Espace entre les groupes de barres
+x = np.arange(len(df_merged)) * (bar_width * len(years) + spacing)  # Ajustement des positions
+
+# Boucle sur les années pour tracer les histogrammes avec nuances de vert
+for i, (year, color) in enumerate(zip(years, year_colors)):
+    ax.bar(
+        x + i * bar_width,
+        df_merged[year_columns[i]],
+        width=bar_width,
+        label=f"Année {year}",
+        color=color  # Utilisation des nuances de vert
+    )
+
+# Configuration des axes et légendes
+ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
+ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
+ax.set_ylabel("Distance Moyenne (km)")
+ax.set_title("Distance Moyenne par Mode de Transport (2020 - 2024)")
+ax.legend()
+
+# Affichage de la visualisation
+st.pyplot(fig)
+
+
 
 
 
