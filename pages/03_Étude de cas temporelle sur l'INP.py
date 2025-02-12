@@ -49,6 +49,7 @@ colonnes_dist = colonnes_dist.to_list()
 colonnes_dist.append('Mode de Transport')
 df_dist = df_merged[colonnes_dist]
 df_dist = df_dist.melt(id_vars='Mode de Transport',value_name='Proportion Distance (%)',var_name='Annee')
+df_dist['Proportion Distance (%)'] = round(df_dist['Proportion Distance (%)'])
 df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Trotinette ou vélo électrique','Trotinette ou vélo')
 df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Autre',np.nan)
 df_dist['Mode de Transport'] = df_dist['Mode de Transport'].replace('Moto / Scooter',np.nan)
@@ -97,7 +98,7 @@ st.header("Quel impact a le challenge mobilité sur les déplacements ?")
 df_impact_challenge = pd.read_excel('BaseDeDonnées/ImpactChallenge.xlsx')
 
 # Création de deux colonnes
-col1, col2 = st.columns([1.5, 1])  # 1/3 pour le texte, 2/3 pour le graphique
+col1, col2 = st.columns([1, 1])  # 1/3 pour le texte, 2/3 pour le graphique
 
 
 
@@ -121,15 +122,11 @@ with col1:
 
 # Partie gauche : texte explicatif
 with col2:
-    st.markdown("## Impact du Challenge Mobilité")
-    st.write(
-        "Ce graphique illustre l'évolution des choix de modes de transport verts "
-        "dans le cadre du Challenge Mobilité. L'objectif est de mesurer l'impact "
-        "de cette initiative sur les comportements de déplacement au fil des années."
-    )
+    st.write("             ")
+    st.write("Ce graphique illustre l'évolution des choix de modes de transport verts dans le cadre du Challenge Mobilité")
+    st.write("L'objectif est de mesurer l'impact de cette initiative sur les comportements de déplacement au fil des années.")
     st.write("L'impact du Challenge Mobilité semble être mitigé. On n'observe pas d'adoption massive des transports verts durant le challenge.")
-
-st.markdown("**Cela indique sûrement que les campagnes de sensibilisation s'adressent souvent à un public déjà conquis.**")
+    st.markdown("**Cela indique sûrement que les campagnes de sensibilisation s'adressent souvent à un public déjà conquis.**")
 
 
 
