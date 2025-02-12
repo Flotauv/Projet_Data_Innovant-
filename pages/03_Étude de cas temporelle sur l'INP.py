@@ -67,16 +67,60 @@ ax.set_ylabel("Proportion d'utilisation %")
 ax.set_title("Proportion d'utilisation par Mode de Transport (2020 - 2024)")
 ax.legend()
 
-
 # Affichage de la visualisation
 st.pyplot(fig)
+
+
+
 
 st.subheader("Les trajets sont-ils décarbonés ? ",divider=True)
 
+
+
+###Part de chaque mode de transport sur les trajets de la ville
+
+# Définition des années et des colonnes concernées
+years = ["2020", "2021", "2022", "2023", "2024"]
+year_columns = [f"Proportion Distance Totale (%) {year}" for year in years]
+
+# Génération d'une palette de rouge dégradé
+cmap = cm.Reds  # Colormap rouge
+year_colors = [cmap(0.2 + i * 0.15) for i in range(len(years))]  # Nuances progressives
+
+# Création du graphique avec nuances de rouge
+fig, ax = plt.subplots(figsize=(14, 7))
+
+# Position des barres avec espacement plus large entre les groupes
+bar_width = 0.15
+spacing = 0.3  # Espace entre les groupes de barres
+x = np.arange(len(df_merged)) * (bar_width * len(years) + spacing)  # Ajustement des positions
+
+# Boucle sur les années pour tracer les histogrammes avec nuances de rouge
+for i, (year, color) in enumerate(zip(years, year_colors)):
+    ax.bar(
+        x + i * bar_width,
+        df_merged[year_columns[i]],
+        width=bar_width,
+        label=f"Année {year}",
+        color=color  # Utilisation des nuances de rouge
+    )
+# Configuration des axes et légendes
+ax.set_xticks(x + bar_width * (len(years) - 1) / 2)
+ax.set_xticklabels(df_merged["Mode de Transport"], rotation=45, ha="right")
+ax.set_ylabel("Part des modes de transport dans les distances cumulées")
+ax.set_title("Importance de chaque mode de transport dans les distances réalisées (2020 - 2024)")
+ax.legend()
+
 # Affichage de la visualisation
 st.pyplot(fig)
 
+
+
+
 st.subheader("Part représentative des modes de déplacement par années ",divider=True)
+
+
+
 
 # Affichage de la visualisation
 st.pyplot(fig)
