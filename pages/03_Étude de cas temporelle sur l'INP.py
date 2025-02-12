@@ -20,8 +20,7 @@ st.header("Comment les modes de transport sont utilisés par les usagers de l'IN
 
 
 
-
-df_merged = pd.read_excel('BaseDeDonnées/df_merged.xlsx')
+df_merged = pd.read_excel("BaseDeDonnées/df_merged.xlsx")
 ###Quelles sont les modes de transport les plus utilisés
 
 import numpy as np
