@@ -233,8 +233,6 @@ data = {
     '2024': df_2024
 }
 
-# Titre de l'application
-st.title("Visualisation des occurrences des modes de transport par type de trajet")
 
 # Sélecteur d'année
 selected_year = st.selectbox("Sélectionnez une année", list(data.keys()))
