@@ -135,6 +135,10 @@ with col1:
         "dans le cadre du Challenge Mobilité. L'objectif est de mesurer l'impact "
         "de cette initiative sur les comportements de déplacement au fil des années."
     )
+    st.write("L'impact du Challenge Mobilité semble être mitigé. On observe pas d'adoption massive des transports verts durant le challenge."
+           st.markdown("**Cela indique sûrement que les campagnes de sensibilisation s'adressent souvent à un public déjà conquis.**")
+)
+
 
 # Partie droite : affichage du graphique
 with col2:
