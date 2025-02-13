@@ -148,6 +148,7 @@ def fct_accidents(file_caracteristique, file_vehicules):
         df = df.rename(columns={'numacc':'Nombre accidents'})
         return df
 
+
 ### Fct de concaténation qui prend du temps notamment du aux boucles (À optimiser si possible )
 @st.cache_data()
 def fct_concat_acc():
@@ -274,7 +275,8 @@ col_comptage_vélos_permanent_principale , col_comptage_vélos_permanent_second 
 
 with col_image_principale:
     st.image('Screens/politiques_grenoble.jpeg',use_container_width=True)
-    st.write('Plusieurs mesures phares qui englobent un large périmètre')
+    st.write("Plusieurs mesures qui ont pour but de promouvoir les mobilités d'ouces dans la métropole Grenobloise")
+    st.write("C'est le cas du vélo, dont nous allons montrer plusieurs indicateurs ")
 
     
 with col_traffic_principale:
@@ -288,8 +290,10 @@ with col_traffic_principale:
                   width=900,
                   height=500
                   )
+    st.write("Le traffic routier autour de Grenoble est important car il permet de quantifier le flux de voiture qui potentiellement rentre dans l'agglomération Grenobloise ")
+    st.write("Attention tout de même, ce taux annualisé ne fait pas de distinctions entre les périodes (estivale, hiver ...), il y a une tendance tout de même qui montre que la voiture pour les personnes loin du centre reste le moyen de déplacement privilégié. ")
 
-    
+
 with col_accident_principale:
     st.subheader('Nombre d\'accidents dans la métropole Grenobloise impliquant un vélo',divider=True)
     st.line_chart(data=fct_concat_acc(),
@@ -299,6 +303,11 @@ with col_accident_principale:
                  y_label="Nombre d'accidents",
                  width=900,
                  height=500)
+    st.write("La cause principale de non prise du vélo est la sécurité, se déplacer en vélo demande une certaine appétence et si les conditions ne sont pas réunies, cette envie peut vite s'en aller ")
+    st.write("La proportion d'accidents reste faible pour le nombre d'utilisateurs quotidien du vélo dans la ville ainsi que la gravité n'est jamais très élevée pourtant un accident reste un accident ")
+    st.write("Il pourrait être intéressant de voir le lieu où l'accident s'est produit et voir l'état de la piste")
+    st.write("Dans nos recherches, un bon nombre d'accidents se sont fait à proximité de carrefours.")
+    st.write("Effectivemment, un carrefour présente un risque pour l'usager à vélo, il y a une rupture de voie cyclable, le revêtement n'est plus le même et il peut y avoir la présence de voitures")
 
 with col_pollution_princiaple:
     st.subheader('Nombre de relevés et états de pollution de l\'agglomération Grenobloise',divider=True)
@@ -312,24 +321,12 @@ with col_pollution_princiaple:
     ).properties(width = 900 ,height = 500 )
     st.altair_chart(chart)
 
+    st.write("La pollution a Grenoble est un sujet qui fait parler, la ville a cette réputation de faire partie d'une cuvette et de voir un nuage de pollution au dessus d'elle en permanence.")
+    st.write("Bien qu'il y ait une part de vérité, depuis quelques années, la pollution à Grenoble semble diminuer, pourtant peu de données autre que des articles pour le vérifier.")
+    st.write("Nous avons pu trouver quelques données relatives à des relevés sur trois années 2019-2020 et 2024")
+    st.write("Les relevés ont été pris sur plusieurs jours consécutifs voir le même jour pour l'année 2019, cependant , pour les années 2020 et 2024, le manque de relevés ne permet pas de conclure sur la qualité de l'air ces années là. ")
+    st.write("La dénomination 'ALERTE' signifie qu'il y a un risque à une exposition à l'air urbain , cela englobe les états {'Faible','Modéré','Élevé'}.  ")
     
-    
-with col_comptage_pietons_permanent_principale:
-    st.subheader(body='Comptage du nombre de piétons par jours annualisé suivant différentes zones géographiques de Grenoble',divider=True)
-    st.bar_chart(data=fct_comptage_pietons_permanents('BaseDeDonnées/Comptage_mode_deplacement/comptages_pietons_permanents.csv'),
-                  x='tmj',
-                  y='valeur',
-                  color='Localisation',
-                  x_label='Années',
-                  y_label='Taux moyen journalier (en millier)',
-                  stack=False,
-                  width=900,
-                  height=500)
-    
-
-
-
-
 
 with col_comptage_vélos_permanent_principale:
     st.subheader(body='Évolution du nombre de vélos par jours annualisé suivant différentes zones au sein de Grenoble',divider=True)
@@ -343,6 +340,6 @@ with col_comptage_vélos_permanent_principale:
                  width=900,
                  height=500)
     
-    
-
+    st.write("Indicateur très important , le nombre moyen journalier annualisé de vélo dans plusieurs axes proches du centre ville de l'agglomération Grenobloise")
+    st.write("D'années en années, ce taux a augmenté sur les différents axes répertoriés, ce qui montre que les politiques entrepries quelques années auparavant y ont contribuées.")
 
