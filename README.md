@@ -2,6 +2,11 @@
 Open data project related to low mobilities in Grenoble city area.
 
 ### The way to access the outcome of our study is to run the streamlit pages in the associated folder /pages.
+It is also possible to access it with the following link :
+https://4n76mmdxxw6eorsuaxlms4.streamlit.app/
+
+It is supposed to be public, if not, please ask for the contributor's role, it shall be granted.
+
 Further explanations related to the code and the way to update it for a future development of the project can be found in the wiki of the project.
 Problems of adding files : 
 
