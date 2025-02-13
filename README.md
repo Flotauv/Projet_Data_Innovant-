@@ -1,5 +1,8 @@
 # Projet_Data_Innovant-
-Open data project related to low mobilities in Grenoble city area 
+Open data project related to low mobilities in Grenoble city area.
+
+###The way to access the outcome of our study is to run the streamlit pages in the associated folder /pages.
+Further explanations related to the code and the way to update it for a future development of the project can be found in the wiki of the project.
 Problems of adding files : 
 
 - error related to ' .git/index.lock ' something like that created =>  rm -f .git/index.lock in the terminal (not needed git in front of )
