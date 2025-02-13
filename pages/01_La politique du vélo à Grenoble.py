@@ -278,7 +278,7 @@ with col_image_principale:
 
     
 with col_traffic_principale:
-    st.subheader('Évolution du traffic autour de Grenoble',divider=True)
+    st.subheader('Évolution du traffic routier autour de Grenoble',divider=True)
     st.line_chart(data=fct_concat(),
                   x='annee',
                   y='tmja',
@@ -326,9 +326,14 @@ with col_comptage_pietons_permanent_principale:
                   width=900,
                   height=500)
     
+
+
+
+
+
 with col_comptage_vélos_permanent_principale:
     st.subheader(body='Évolution du nombre de vélos par jours annualisé suivant différentes zones au sein de Grenoble',divider=True)
-    st.bar_chart(data=fct_comptage_velos_permanents('BaseDeDonnées/Comptage_mode_deplacement/comptages_velos_permanents.csv'),
+    graph_velo = st.bar_chart(data=fct_comptage_velos_permanents('BaseDeDonnées/Comptage_mode_deplacement/comptages_velos_permanents.csv'),
                  x='tmj',
                  y='valeur',
                  x_label='Années',
@@ -338,3 +343,6 @@ with col_comptage_vélos_permanent_principale:
                  width=900,
                  height=500)
     
+    
+
+
