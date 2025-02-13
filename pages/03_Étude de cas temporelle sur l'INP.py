@@ -114,8 +114,8 @@ ax.legend()
 # Affichage de la visualisation
 st.pyplot(fig)
 
-st.markdown("** Ici, nous représentons la part que chaque mode de transport occupe dans les distances quotidiennes parcourues par les usagers.
-Nous constatons que les kilomètres parcourus sont largement décarbonés**")
+st.markdown("**Ici, nous représentons la part que chaque mode de transport occupe dans les distances quotidiennes parcourues par les usagers.**  \n**Nous constatons que les kilomètres parcourus sont largement décarbonés.**")
+
 
 
 
