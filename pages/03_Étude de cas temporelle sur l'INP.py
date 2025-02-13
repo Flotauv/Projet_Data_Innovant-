@@ -326,8 +326,6 @@ st.markdown(
     "**En conclusion, il y a deux manières de mener des politiques : les sensibilisations, qui ont une portée intrinsèquement limitée pour diverses raisons variées (conditionnement à être mieux réceptif, éducation, culture), et les actions matérielles pour toucher les personnes non sensibles et qui s'attachent aux aspects pratiques des modes de transport (les infrastructures), etc. Ces dernières recherchent des avantages concurrentiels pour choisir les mobilités douces.**"
 )
 st.markdown(
-    "**En définitive, il faut des campagnes de sensibilisation pour toucher les populations réceptives, et des investissements matériels pour donner un avantage concurrentiel aux mobilités douces et encourager leur adoption. Dans le cas de l'INP, le public est déjà en partie conquis ; il faut donc des investissements matériels pour convaincre ceux qui attendent des avantages pratiques.**"
+    "**Il faut des campagnes de sensibilisation pour toucher les populations réceptives, et des investissements matériels pour donner un avantage concurrentiel aux mobilités douces et encourager leur adoption. Dans le cas de l'INP, le public est déjà en partie conquis ; il faut donc des investissements matériels pour convaincre ceux qui attendent des avantages pratiques. Il faut donc bien étudier les populations pour définir les types de politiques à adopter afin de favoriser les mobilités douces.**"
 )
-st.markdown(
-    "**Il faut donc bien étudier les populations pour définir les types de politiques à adopter afin de favoriser les mobilités douces.**"
-)
+
