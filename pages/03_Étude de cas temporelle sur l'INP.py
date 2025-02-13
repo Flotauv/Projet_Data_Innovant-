@@ -318,3 +318,7 @@ plt.gca().invert_yaxis()
 # Affichage de la visualisation
 st.pyplot(fig)
 
+st.markdown(
+    "**Ici, nous découvrons que, d'une manière générale, deux types de raisons motivent le choix d'un mode de transport : les raisons issues des sensibilisations, telles que l'écologie et la santé, et des raisons plus pratiques, comme le coût et le temps.**"
+)
+
