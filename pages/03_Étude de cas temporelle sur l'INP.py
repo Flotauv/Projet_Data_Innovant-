@@ -261,6 +261,13 @@ plt.tight_layout()
 # Affichage de la heatmap dans Streamlit
 st.pyplot(fig)
 
+st.markdown(
+    "**Nous avons la liste des utilisations des différents modes de transport pour chaque type de trajet.**  \n"
+    "**Dans chaque case, il est indiqué combien de fois un mode de transport donné est utilisé pour un type de trajet.**  \n"
+    "**On apprend que pour les types de trajets de 'très courte distance' à 'longue distance', les moyens de transport utilisés sont largement doux.**  \n"
+    "**Seul le segment 'très longue distance' présente de nombreuses utilisations de moyens de transport moins verts (voiture).**  \n"
+    "**On utilise une large palette de transports pour les très longues distances.**"
+)
 
 
 
