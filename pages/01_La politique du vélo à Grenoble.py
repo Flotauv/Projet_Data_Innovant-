@@ -322,6 +322,7 @@ with col_comptage_pietons_permanent_principale:
                   color='Localisation',
                   x_label='Années',
                   y_label='Taux moyen journalier (en millier)',
+                  stack=False,
                   width=900,
                   height=500)
     
@@ -333,6 +334,7 @@ with col_comptage_vélos_permanent_principale:
                  x_label='Années',
                  y_label='Taux moyen journalier (en millier)',
                  color='Localisation',
+                 stack=False,
                  width=900,
                  height=500)
     
