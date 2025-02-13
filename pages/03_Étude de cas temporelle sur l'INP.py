@@ -8,7 +8,7 @@ from collections import Counter
 st.set_page_config(page_title = "Étude de cas temporelle sur l'INP",layout="wide")
 # Titres 
 st.title("Étude de cas temporelle sur l'INP")
-st.write("Cette page présente une analyse des données de l'INP, groupe d'écoles de l'Université Grenoble Alpes.")
+st.write("Cette page présente une analyse des données de Grenoble INP, groupe d'écoles de l'Université Grenoble Alpes. Le groupe INP compte environ 8 350 étudiants et de nombreux personnels (doctorants, employés divers, etc.). Cette population est en partie représentative de la ville de Grenoble, avec une forte proportion d'étudiants.")
     
 st.write("Les visualisations s'appuient sur une enquête intitulée **_'Challenge mobilité'_**  sur cinq années 2020 (149 répondants), 2021 (735), 2022 (247), 2023 (412), 2024 (424)")
 st.write("Cette enquête compare les trajets de personnes faisant partie de  l'INP se rendant sur leur lieu de travail/étude via différents modes de transport")
