@@ -12,6 +12,7 @@ st.write("Cette page présente une analyse des données de Grenoble INP, groupe 
     
 st.write("Les visualisations s'appuient sur une enquête intitulée **'Challenge Mobilité'** réalisée sur cinq années : 2020 (149 répondants), 2021 (735), 2022 (247), 2023 (412), 2024 (424). Le challenge consiste en une journée par an où les usagers sont invités à délaisser les modes de transport fortement carbonés pour des modes plus verts (vélo, marche à pied, tram, etc.).")
 st.write("Cette enquête compare le trajet type d'un usager vers son lieu de travail avec le trajet réalisé le jour du Challenge Mobilité. Pour chaque trajet, nous disposons des modes de transport utilisés et des kilomètres parcourus pour chaque mode.")
+st.markdown("**L'objet de cette étude de cas est de déceler les impacts des politiques publiques de la ville de Grenoble sur les mobilités douces.**")
 
 
 
