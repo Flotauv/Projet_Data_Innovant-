@@ -70,8 +70,7 @@ ax.legend()
 # Affichage de la visualisation
 st.pyplot(fig)
 
-st.write("Les mobilités vertes sont largement plébiscitées par les usagers de l'INP")
-
+st.markdown("**Les mobilités vertes sont largement plébiscitées par les usagers de l'INP**")
 
 
 st.subheader("Les trajets sont-ils décarbonés ? ",divider=True)
@@ -115,6 +114,8 @@ ax.legend()
 # Affichage de la visualisation
 st.pyplot(fig)
 
+st.markdown("** Ici, nous représentons la part que chaque mode de transport occupe dans les distances quotidiennes parcourues par les usagers.
+Nous constatons que les kilomètres parcourus sont largement décarbonés**")
 
 
 
