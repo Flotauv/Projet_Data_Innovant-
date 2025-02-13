@@ -70,7 +70,7 @@ ax.legend()
 # Affichage de la visualisation
 st.pyplot(fig)
 
-st.markdown("**Les mobilités vertes sont largement plébiscitées par les usagers de l'INP**")
+st.markdown("**Les mobilités vertes sont largement plébiscitées par les usagers de l'INP.**")
 
 
 st.subheader("Les trajets sont-ils décarbonés ? ",divider=True)
@@ -162,6 +162,7 @@ ax.legend()
 st.pyplot(fig)
 
 
+st.markdown("**Les mobilités typiquement urbaines, telles que la marche à pied, le vélo, le tramway et le bus, sont utilisées par les usagers pour effectuer de courtes distances.**  \n**Les transports comme la voiture, le train, etc., sont utilisés pour de grandes distances.**  \n**Cela indique que les mobilités urbaines sont forcément plus utilisées par rapport aux autres, compte tenu de leur importance dans la part des distances totales à Grenoble.**")
 
 
 
