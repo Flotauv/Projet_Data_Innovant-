@@ -322,3 +322,7 @@ st.markdown(
     "**Ici, nous découvrons que, d'une manière générale, deux types de raisons motivent le choix d'un mode de transport : les raisons issues des sensibilisations, telles que l'écologie et la santé, et des raisons plus pratiques, comme le coût et le temps.**"
 )
 
+st.markdown(
+    "**En conclusion, il y a deux manières de mener des politiques : les sensibilisations, qui ont une portée intrinsèquement limitée pour diverses raisons (conditionnement à être mieux réceptif, éducation, culture), et les actions matérielles pour toucher les personnes non sensibles et qui s'attachent aux aspects pratiques des modes de transport (les infrastructures), etc. Ces dernières recherchent des avantages concurrentiels pour choisir les mobilités douces.**"
+)
+
