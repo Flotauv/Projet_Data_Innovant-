@@ -70,6 +70,7 @@ ax.legend()
 # Affichage de la visualisation
 st.pyplot(fig)
 
+st.write("Les mobilités vertes sont largement plébiscitées par les usagers de l'INP")
 
 
 
